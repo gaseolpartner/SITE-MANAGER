@@ -1,0 +1,3202 @@
+[
+  {
+    "rank": 1,
+    "name": "다올이앤씨(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "4924억원",
+    "status": "-"
+  },
+  {
+    "rank": 2,
+    "name": "(주)포스코이앤씨",
+    "ceo": "-",
+    "location": "경상북도",
+    "amount": "4174억원",
+    "status": "-"
+  },
+  {
+    "rank": 3,
+    "name": "두송건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "3334억원",
+    "status": "-"
+  },
+  {
+    "rank": 4,
+    "name": "삼호개발(주)",
+    "ceo": "-",
+    "location": "충청남도",
+    "amount": "3109억원",
+    "status": "-"
+  },
+  {
+    "rank": 5,
+    "name": "원영건업(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "2894억원",
+    "status": "-"
+  },
+  {
+    "rank": 6,
+    "name": "(주)서원토건",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "2864억원",
+    "status": "-"
+  },
+  {
+    "rank": 7,
+    "name": "월드건영(주)",
+    "ceo": "-",
+    "location": "경기도 포천시",
+    "amount": "2659억원",
+    "status": "-"
+  },
+  {
+    "rank": 8,
+    "name": "(주)우정건설",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "2563억원",
+    "status": "-"
+  },
+  {
+    "rank": 9,
+    "name": "보림토건(주)",
+    "ceo": "-",
+    "location": "서울특별시 광진구",
+    "amount": "2428억원",
+    "status": "-"
+  },
+  {
+    "rank": 10,
+    "name": "(주)호주건설",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "2393억원",
+    "status": "-"
+  },
+  {
+    "rank": 11,
+    "name": "서용건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "2153억원",
+    "status": "-"
+  },
+  {
+    "rank": 12,
+    "name": "(주)케이이씨",
+    "ceo": "-",
+    "location": "충청북도",
+    "amount": "2088억원",
+    "status": "-"
+  },
+  {
+    "rank": 13,
+    "name": "중현테크(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "2043억원",
+    "status": "-"
+  },
+  {
+    "rank": 14,
+    "name": "남동건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1926억원",
+    "status": "-"
+  },
+  {
+    "rank": 15,
+    "name": "(주)청해진건설",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "1834억원",
+    "status": "-"
+  },
+  {
+    "rank": 16,
+    "name": "우원개발(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "1772억원",
+    "status": "-"
+  },
+  {
+    "rank": 17,
+    "name": "오엔건설(주)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "1734억원",
+    "status": "-"
+  },
+  {
+    "rank": 18,
+    "name": "(주)조형기술개발",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1694억원",
+    "status": "-"
+  },
+  {
+    "rank": 19,
+    "name": "(주)월드플랜",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "1674억원",
+    "status": "-"
+  },
+  {
+    "rank": 20,
+    "name": "(주)지형건설",
+    "ceo": "-",
+    "location": "광주광역시 남구",
+    "amount": "1655억원",
+    "status": "-"
+  },
+  {
+    "rank": 21,
+    "name": "(주)백광도시개발",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1615억원",
+    "status": "-"
+  },
+  {
+    "rank": 22,
+    "name": "동우건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 북구",
+    "amount": "1582억원",
+    "status": "-"
+  },
+  {
+    "rank": 23,
+    "name": "관악산업(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "1564억원",
+    "status": "-"
+  },
+  {
+    "rank": 24,
+    "name": "삼지건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 기장군",
+    "amount": "1550억원",
+    "status": "-"
+  },
+  {
+    "rank": 25,
+    "name": "(주)대원개발",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "1544억원",
+    "status": "-"
+  },
+  {
+    "rank": 26,
+    "name": "신신건설(주)",
+    "ceo": "-",
+    "location": "경기도 수원시",
+    "amount": "1535억원",
+    "status": "-"
+  },
+  {
+    "rank": 27,
+    "name": "무성(주)",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "1526억원",
+    "status": "-"
+  },
+  {
+    "rank": 28,
+    "name": "(주)아이엘이앤씨",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1523억원",
+    "status": "-"
+  },
+  {
+    "rank": 29,
+    "name": "엘티삼보(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "1456억원",
+    "status": "-"
+  },
+  {
+    "rank": 30,
+    "name": "원합건설(주)",
+    "ceo": "-",
+    "location": "대전광역시 서구",
+    "amount": "1397억원",
+    "status": "-"
+  },
+  {
+    "rank": 31,
+    "name": "(주)우설건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1350억원",
+    "status": "-"
+  },
+  {
+    "rank": 32,
+    "name": "(주)푸리건설",
+    "ceo": "-",
+    "location": "대구광역시 중구",
+    "amount": "1331억원",
+    "status": "-"
+  },
+  {
+    "rank": 33,
+    "name": "승주건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "1312억원",
+    "status": "-"
+  },
+  {
+    "rank": 34,
+    "name": "(주)올레건설",
+    "ceo": "-",
+    "location": "서울특별시 영등포구",
+    "amount": "1306억원",
+    "status": "-"
+  },
+  {
+    "rank": 35,
+    "name": "(주)건향개발",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "1301억원",
+    "status": "-"
+  },
+  {
+    "rank": 36,
+    "name": "광영개발(주)",
+    "ceo": "-",
+    "location": "경기도 안산시",
+    "amount": "1294억원",
+    "status": "-"
+  },
+  {
+    "rank": 37,
+    "name": "(주)브라더건설",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "1247억원",
+    "status": "-"
+  },
+  {
+    "rank": 38,
+    "name": "삼지토건(주)",
+    "ceo": "-",
+    "location": "광주광역시 북구",
+    "amount": "1217억원",
+    "status": "-"
+  },
+  {
+    "rank": 39,
+    "name": "(주)일창건설",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "1207억원",
+    "status": "-"
+  },
+  {
+    "rank": 40,
+    "name": "레오개발(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1159억원",
+    "status": "-"
+  },
+  {
+    "rank": 41,
+    "name": "일우건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "1153억원",
+    "status": "-"
+  },
+  {
+    "rank": 42,
+    "name": "대도토건(주)",
+    "ceo": "-",
+    "location": "대구광역시 수성구",
+    "amount": "1121억원",
+    "status": "-"
+  },
+  {
+    "rank": 43,
+    "name": "덕일플러스건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "1095억원",
+    "status": "-"
+  },
+  {
+    "rank": 44,
+    "name": "(주)한창이엔씨",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "1093억원",
+    "status": "-"
+  },
+  {
+    "rank": 45,
+    "name": "(주)진도토건",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "1074억원",
+    "status": "-"
+  },
+  {
+    "rank": 46,
+    "name": "(주)인건토건",
+    "ceo": "-",
+    "location": "서울특별시 마포구",
+    "amount": "1071억원",
+    "status": "-"
+  },
+  {
+    "rank": 47,
+    "name": "(자)안현건설",
+    "ceo": "-",
+    "location": "대전광역시 유성구",
+    "amount": "1050억원",
+    "status": "-"
+  },
+  {
+    "rank": 48,
+    "name": "도양기업(주)",
+    "ceo": "-",
+    "location": "전라남도 여수시",
+    "amount": "1032억원",
+    "status": "-"
+  },
+  {
+    "rank": 49,
+    "name": "(주)지현건설",
+    "ceo": "-",
+    "location": "대전광역시 유성구",
+    "amount": "1013억원",
+    "status": "-"
+  },
+  {
+    "rank": 50,
+    "name": "백운건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "974억원",
+    "status": "-"
+  },
+  {
+    "rank": 51,
+    "name": "진공건설(주)",
+    "ceo": "-",
+    "location": "전라남도 여수시",
+    "amount": "965억원",
+    "status": "-"
+  },
+  {
+    "rank": 52,
+    "name": "대흥건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "962억원",
+    "status": "-"
+  },
+  {
+    "rank": 53,
+    "name": "우영건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "956억원",
+    "status": "-"
+  },
+  {
+    "rank": 54,
+    "name": "(주)보미엔지니어링",
+    "ceo": "-",
+    "location": "서울특별시 성북구",
+    "amount": "940억원",
+    "status": "-"
+  },
+  {
+    "rank": 55,
+    "name": "(주)범강",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "936억원",
+    "status": "-"
+  },
+  {
+    "rank": 56,
+    "name": "삼하건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "935억원",
+    "status": "-"
+  },
+  {
+    "rank": 57,
+    "name": "(주)태일씨앤티",
+    "ceo": "-",
+    "location": "서울특별시 금천구",
+    "amount": "928억원",
+    "status": "-"
+  },
+  {
+    "rank": 58,
+    "name": "영빈건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 동래구",
+    "amount": "903억원",
+    "status": "-"
+  },
+  {
+    "rank": 59,
+    "name": "(주)대항건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "898억원",
+    "status": "-"
+  },
+  {
+    "rank": 60,
+    "name": "홍우산업(주)",
+    "ceo": "-",
+    "location": "부산광역시 중구",
+    "amount": "890억원",
+    "status": "-"
+  },
+  {
+    "rank": 61,
+    "name": "대원산업개발(유)",
+    "ceo": "-",
+    "location": "전북특별자치도",
+    "amount": "887억원",
+    "status": "-"
+  },
+  {
+    "rank": 62,
+    "name": "(주)엠지건설",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "886억원",
+    "status": "-"
+  },
+  {
+    "rank": 63,
+    "name": "원영건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 사하구",
+    "amount": "875억원",
+    "status": "-"
+  },
+  {
+    "rank": 64,
+    "name": "(주)휴강건설",
+    "ceo": "-",
+    "location": "인천광역시 서구",
+    "amount": "851억원",
+    "status": "-"
+  },
+  {
+    "rank": 65,
+    "name": "(주)화응건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "844억원",
+    "status": "-"
+  },
+  {
+    "rank": 66,
+    "name": "신현건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "836억원",
+    "status": "-"
+  },
+  {
+    "rank": 67,
+    "name": "배성건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "835억원",
+    "status": "-"
+  },
+  {
+    "rank": 68,
+    "name": "대선산업개발(주)",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "821억원",
+    "status": "-"
+  },
+  {
+    "rank": 69,
+    "name": "웅진개발(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "820억원",
+    "status": "-"
+  },
+  {
+    "rank": 70,
+    "name": "강용건설(자)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "819억원",
+    "status": "-"
+  },
+  {
+    "rank": 71,
+    "name": "구산토건(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "817억원",
+    "status": "-"
+  },
+  {
+    "rank": 72,
+    "name": "(주)세보엘이씨",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "814억원",
+    "status": "-"
+  },
+  {
+    "rank": 73,
+    "name": "(주)서현개발",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "813억원",
+    "status": "-"
+  },
+  {
+    "rank": 74,
+    "name": "금웅건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "809억원",
+    "status": "-"
+  },
+  {
+    "rank": 75,
+    "name": "태영건업(주)",
+    "ceo": "-",
+    "location": "부산광역시 연제구",
+    "amount": "807억원",
+    "status": "-"
+  },
+  {
+    "rank": 76,
+    "name": "(주)원전건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "782억원",
+    "status": "-"
+  },
+  {
+    "rank": 77,
+    "name": "(주)특수건설",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "763억원",
+    "status": "-"
+  },
+  {
+    "rank": 78,
+    "name": "(주)기창건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "745억원",
+    "status": "-"
+  },
+  {
+    "rank": 79,
+    "name": "백포건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 연제구",
+    "amount": "741억원",
+    "status": "-"
+  },
+  {
+    "rank": 80,
+    "name": "덕춘건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 중구",
+    "amount": "723억원",
+    "status": "-"
+  },
+  {
+    "rank": 81,
+    "name": "덕천개발(주)",
+    "ceo": "-",
+    "location": "충청북도 청주시",
+    "amount": "717억원",
+    "status": "-"
+  },
+  {
+    "rank": 82,
+    "name": "한국콘크리트산업(주)",
+    "ceo": "-",
+    "location": "경기도 시흥시",
+    "amount": "713억원",
+    "status": "-"
+  },
+  {
+    "rank": 83,
+    "name": "(주)성보씨엔이",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "710억원",
+    "status": "-"
+  },
+  {
+    "rank": 84,
+    "name": "고이건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "699억원",
+    "status": "-"
+  },
+  {
+    "rank": 85,
+    "name": "천자개발(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "686억원",
+    "status": "-"
+  },
+  {
+    "rank": 86,
+    "name": "(주)대흥토건",
+    "ceo": "-",
+    "location": "충청북도",
+    "amount": "682억원",
+    "status": "-"
+  },
+  {
+    "rank": 87,
+    "name": "장차건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "681억원",
+    "status": "-"
+  },
+  {
+    "rank": 88,
+    "name": "정품건설산업(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "676억원",
+    "status": "-"
+  },
+  {
+    "rank": 89,
+    "name": "(주)태민건설",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "659억원",
+    "status": "-"
+  },
+  {
+    "rank": 90,
+    "name": "하성이앤씨(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "655억원",
+    "status": "-"
+  },
+  {
+    "rank": 91,
+    "name": "개일건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "654억원",
+    "status": "-"
+  },
+  {
+    "rank": 92,
+    "name": "(주)황용건설",
+    "ceo": "-",
+    "location": "서울특별시 서대문구",
+    "amount": "652억원",
+    "status": "-"
+  },
+  {
+    "rank": 93,
+    "name": "오성건설산업(주)",
+    "ceo": "-",
+    "location": "대전광역시 유성구",
+    "amount": "648억원",
+    "status": "-"
+  },
+  {
+    "rank": 94,
+    "name": "(주)경윤건설",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "647억원",
+    "status": "-"
+  },
+  {
+    "rank": 95,
+    "name": "세석건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "638억원",
+    "status": "-"
+  },
+  {
+    "rank": 96,
+    "name": "(주)신현건설",
+    "ceo": "-",
+    "location": "대구광역시 달서구",
+    "amount": "628억원",
+    "status": "-"
+  },
+  {
+    "rank": 97,
+    "name": "(주)복락이엔씨",
+    "ceo": "-",
+    "location": "경기도 화성시",
+    "amount": "627억원",
+    "status": "-"
+  },
+  {
+    "rank": 98,
+    "name": "(주)유림개발",
+    "ceo": "-",
+    "location": "전북특별자치도 전주시",
+    "amount": "622억원",
+    "status": "-"
+  },
+  {
+    "rank": 99,
+    "name": "성주건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "616억원",
+    "status": "-"
+  },
+  {
+    "rank": 100,
+    "name": "(주)부강티엔씨",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "601억원",
+    "status": "-"
+  },
+  {
+    "rank": 101,
+    "name": "대보실업(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "595억원",
+    "status": "-"
+  },
+  {
+    "rank": 102,
+    "name": "강남건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 북구",
+    "amount": "583억원",
+    "status": "-"
+  },
+  {
+    "rank": 103,
+    "name": "첨단개발(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "582억원",
+    "status": "-"
+  },
+  {
+    "rank": 104,
+    "name": "금농토건(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "562억원",
+    "status": "-"
+  },
+  {
+    "rank": 105,
+    "name": "지승건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "561억원",
+    "status": "-"
+  },
+  {
+    "rank": 106,
+    "name": "예인건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "554억원",
+    "status": "-"
+  },
+  {
+    "rank": 107,
+    "name": "(주)덕재건설",
+    "ceo": "-",
+    "location": "부산광역시 해운대구",
+    "amount": "552억원",
+    "status": "-"
+  },
+  {
+    "rank": 108,
+    "name": "대용건설(주)",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "547억원",
+    "status": "-"
+  },
+  {
+    "rank": 109,
+    "name": "(주)공산건설",
+    "ceo": "-",
+    "location": "대구광역시 동구",
+    "amount": "547억원",
+    "status": "-"
+  },
+  {
+    "rank": 110,
+    "name": "(주)신두산성건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "546억원",
+    "status": "-"
+  },
+  {
+    "rank": 111,
+    "name": "(주)동일개발",
+    "ceo": "-",
+    "location": "서울특별시 영등포구",
+    "amount": "540억원",
+    "status": "-"
+  },
+  {
+    "rank": 112,
+    "name": "(주)어드반건설",
+    "ceo": "-",
+    "location": "인천광역시 남동구",
+    "amount": "539억원",
+    "status": "-"
+  },
+  {
+    "rank": 113,
+    "name": "(주)제일공사",
+    "ceo": "-",
+    "location": "부산광역시 금정구",
+    "amount": "539억원",
+    "status": "-"
+  },
+  {
+    "rank": 114,
+    "name": "(주)경북건설",
+    "ceo": "-",
+    "location": "경상북도",
+    "amount": "530억원",
+    "status": "-"
+  },
+  {
+    "rank": 115,
+    "name": "발해건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "529억원",
+    "status": "-"
+  },
+  {
+    "rank": 116,
+    "name": "(주)해림건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "528억원",
+    "status": "-"
+  },
+  {
+    "rank": 117,
+    "name": "(주)우인건설",
+    "ceo": "-",
+    "location": "경기도 안양시",
+    "amount": "528억원",
+    "status": "-"
+  },
+  {
+    "rank": 118,
+    "name": "서천건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "521억원",
+    "status": "-"
+  },
+  {
+    "rank": 119,
+    "name": "(주)신보",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "521억원",
+    "status": "-"
+  },
+  {
+    "rank": 120,
+    "name": "여름건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "520억원",
+    "status": "-"
+  },
+  {
+    "rank": 121,
+    "name": "극동건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "517억원",
+    "status": "-"
+  },
+  {
+    "rank": 122,
+    "name": "(주)성호에스씨",
+    "ceo": "-",
+    "location": "대구광역시 달서구",
+    "amount": "513억원",
+    "status": "-"
+  },
+  {
+    "rank": 123,
+    "name": "(주)에스앤씨산업",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "512억원",
+    "status": "-"
+  },
+  {
+    "rank": 124,
+    "name": "(주)보은건설",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "509억원",
+    "status": "-"
+  },
+  {
+    "rank": 125,
+    "name": "(주)우레씨네코리아",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "498억원",
+    "status": "-"
+  },
+  {
+    "rank": 126,
+    "name": "(주)재현건설",
+    "ceo": "-",
+    "location": "부산광역시 연제구",
+    "amount": "495억원",
+    "status": "-"
+  },
+  {
+    "rank": 127,
+    "name": "홍석건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "487억원",
+    "status": "-"
+  },
+  {
+    "rank": 128,
+    "name": "영인산업(주)",
+    "ceo": "-",
+    "location": "대전광역시 유성구",
+    "amount": "486억원",
+    "status": "-"
+  },
+  {
+    "rank": 129,
+    "name": "(주)신화",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "486억원",
+    "status": "-"
+  },
+  {
+    "rank": 130,
+    "name": "(주)시원이엔씨",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "484억원",
+    "status": "-"
+  },
+  {
+    "rank": 131,
+    "name": "동인종합건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "483억원",
+    "status": "-"
+  },
+  {
+    "rank": 132,
+    "name": "(주)퍼스트초이스",
+    "ceo": "-",
+    "location": "경기도 성남시",
+    "amount": "477억원",
+    "status": "-"
+  },
+  {
+    "rank": 133,
+    "name": "(주)화평건설",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "475억원",
+    "status": "-"
+  },
+  {
+    "rank": 134,
+    "name": "(주)이룸건설",
+    "ceo": "-",
+    "location": "인천광역시 연수구",
+    "amount": "473억원",
+    "status": "-"
+  },
+  {
+    "rank": 135,
+    "name": "(주)세기토건",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "470억원",
+    "status": "-"
+  },
+  {
+    "rank": 136,
+    "name": "대호토건(주)",
+    "ceo": "-",
+    "location": "인천광역시 부평구",
+    "amount": "468억원",
+    "status": "-"
+  },
+  {
+    "rank": 137,
+    "name": "대명건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "465억원",
+    "status": "-"
+  },
+  {
+    "rank": 138,
+    "name": "다산아이앤씨(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "463억원",
+    "status": "-"
+  },
+  {
+    "rank": 139,
+    "name": "(주)전남건설",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "460억원",
+    "status": "-"
+  },
+  {
+    "rank": 140,
+    "name": "(주)남양토건",
+    "ceo": "-",
+    "location": "대구광역시 수성구",
+    "amount": "458억원",
+    "status": "-"
+  },
+  {
+    "rank": 141,
+    "name": "(주)덕신이피씨",
+    "ceo": "-",
+    "location": "충청남도",
+    "amount": "457억원",
+    "status": "-"
+  },
+  {
+    "rank": 142,
+    "name": "(주)청송건설",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "452억원",
+    "status": "-"
+  },
+  {
+    "rank": 143,
+    "name": "(주)우룡건설",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "449억원",
+    "status": "-"
+  },
+  {
+    "rank": 144,
+    "name": "여명건영(주)",
+    "ceo": "-",
+    "location": "경기도 안산시",
+    "amount": "447억원",
+    "status": "-"
+  },
+  {
+    "rank": 145,
+    "name": "영인건설(주)",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "446억원",
+    "status": "-"
+  },
+  {
+    "rank": 146,
+    "name": "(주)서광이엔씨",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "445억원",
+    "status": "-"
+  },
+  {
+    "rank": 147,
+    "name": "(주)원석건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "444억원",
+    "status": "-"
+  },
+  {
+    "rank": 148,
+    "name": "(주)흥원건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "440억원",
+    "status": "-"
+  },
+  {
+    "rank": 149,
+    "name": "다힘건설(주)",
+    "ceo": "-",
+    "location": "경기도 시흥시",
+    "amount": "437억원",
+    "status": "-"
+  },
+  {
+    "rank": 150,
+    "name": "강산개발(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "435억원",
+    "status": "-"
+  },
+  {
+    "rank": 151,
+    "name": "(주)태흥건설",
+    "ceo": "-",
+    "location": "대구광역시 달서구",
+    "amount": "434억원",
+    "status": "-"
+  },
+  {
+    "rank": 152,
+    "name": "(주)토방건설",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "434억원",
+    "status": "-"
+  },
+  {
+    "rank": 153,
+    "name": "(주)농협네트웍스",
+    "ceo": "-",
+    "location": "서울특별시 동대문구",
+    "amount": "429억원",
+    "status": "-"
+  },
+  {
+    "rank": 154,
+    "name": "(주)삼현비앤이",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "429억원",
+    "status": "-"
+  },
+  {
+    "rank": 155,
+    "name": "대마산업(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "428억원",
+    "status": "-"
+  },
+  {
+    "rank": 156,
+    "name": "윤주건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "426억원",
+    "status": "-"
+  },
+  {
+    "rank": 157,
+    "name": "(주)한울산업",
+    "ceo": "-",
+    "location": "인천광역시 부평구",
+    "amount": "425억원",
+    "status": "-"
+  },
+  {
+    "rank": 158,
+    "name": "대양건설(주)",
+    "ceo": "-",
+    "location": "경기도 안양시",
+    "amount": "422억원",
+    "status": "-"
+  },
+  {
+    "rank": 159,
+    "name": "(주)보운건설",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "419억원",
+    "status": "-"
+  },
+  {
+    "rank": 160,
+    "name": "(주)대경산업개발",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "414억원",
+    "status": "-"
+  },
+  {
+    "rank": 161,
+    "name": "보림토건(주)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "413억원",
+    "status": "-"
+  },
+  {
+    "rank": 162,
+    "name": "(주)광한",
+    "ceo": "-",
+    "location": "부산광역시 연제구",
+    "amount": "413억원",
+    "status": "-"
+  },
+  {
+    "rank": 163,
+    "name": "(주)에이치이엔씨",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "412억원",
+    "status": "-"
+  },
+  {
+    "rank": 164,
+    "name": "(주)태정건업",
+    "ceo": "-",
+    "location": "부산광역시 부산진구",
+    "amount": "411억원",
+    "status": "-"
+  },
+  {
+    "rank": 165,
+    "name": "청산건설(주)",
+    "ceo": "-",
+    "location": "경기도 남양주시",
+    "amount": "408억원",
+    "status": "-"
+  },
+  {
+    "rank": 166,
+    "name": "(주)대한건설",
+    "ceo": "-",
+    "location": "강원특별자치도",
+    "amount": "407억원",
+    "status": "-"
+  },
+  {
+    "rank": 167,
+    "name": "천영건설(주)",
+    "ceo": "-",
+    "location": "경기도 용인시",
+    "amount": "407억원",
+    "status": "-"
+  },
+  {
+    "rank": 168,
+    "name": "혁선건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 관악구",
+    "amount": "407억원",
+    "status": "-"
+  },
+  {
+    "rank": 169,
+    "name": "(주)우창이엔씨",
+    "ceo": "-",
+    "location": "인천광역시 연수구",
+    "amount": "406억원",
+    "status": "-"
+  },
+  {
+    "rank": 170,
+    "name": "(주)태우",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "405억원",
+    "status": "-"
+  },
+  {
+    "rank": 171,
+    "name": "산하건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "405억원",
+    "status": "-"
+  },
+  {
+    "rank": 172,
+    "name": "(주)기담건설",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "401억원",
+    "status": "-"
+  },
+  {
+    "rank": 173,
+    "name": "수주건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "401억원",
+    "status": "-"
+  },
+  {
+    "rank": 174,
+    "name": "케이엔글로벌(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "400억원",
+    "status": "-"
+  },
+  {
+    "rank": 175,
+    "name": "(주)한국교량",
+    "ceo": "-",
+    "location": "인천광역시 서구",
+    "amount": "399억원",
+    "status": "-"
+  },
+  {
+    "rank": 176,
+    "name": "(주)탑엔지니어링",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "399억원",
+    "status": "-"
+  },
+  {
+    "rank": 177,
+    "name": "유형건설(주)",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "399억원",
+    "status": "-"
+  },
+  {
+    "rank": 178,
+    "name": "(주)토당건설",
+    "ceo": "-",
+    "location": "경기도 광명시",
+    "amount": "390억원",
+    "status": "-"
+  },
+  {
+    "rank": 179,
+    "name": "대양건설산업(주)",
+    "ceo": "-",
+    "location": "전라남도 담양군",
+    "amount": "390억원",
+    "status": "-"
+  },
+  {
+    "rank": 180,
+    "name": "원탑건설(주)",
+    "ceo": "-",
+    "location": "충청북도 청주시",
+    "amount": "390억원",
+    "status": "-"
+  },
+  {
+    "rank": 181,
+    "name": "(주)서창건설",
+    "ceo": "-",
+    "location": "경기도 화성시",
+    "amount": "389억원",
+    "status": "-"
+  },
+  {
+    "rank": 182,
+    "name": "(주)와이제이건설",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "388억원",
+    "status": "-"
+  },
+  {
+    "rank": 183,
+    "name": "(주)동아지질",
+    "ceo": "-",
+    "location": "부산광역시 금정구",
+    "amount": "385억원",
+    "status": "-"
+  },
+  {
+    "rank": 184,
+    "name": "(주)대양산업건설",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "384억원",
+    "status": "-"
+  },
+  {
+    "rank": 185,
+    "name": "(주)백석산업",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "383억원",
+    "status": "-"
+  },
+  {
+    "rank": 186,
+    "name": "동림건업(주)",
+    "ceo": "-",
+    "location": "부산광역시 연제구",
+    "amount": "381억원",
+    "status": "-"
+  },
+  {
+    "rank": 187,
+    "name": "(주)지우이엔지",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "377억원",
+    "status": "-"
+  },
+  {
+    "rank": 188,
+    "name": "에이치씨디(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "375억원",
+    "status": "-"
+  },
+  {
+    "rank": 189,
+    "name": "금품건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 수영구",
+    "amount": "375억원",
+    "status": "-"
+  },
+  {
+    "rank": 190,
+    "name": "동국건업(주)",
+    "ceo": "-",
+    "location": "서울특별시 마포구",
+    "amount": "373억원",
+    "status": "-"
+  },
+  {
+    "rank": 191,
+    "name": "(주)보국이앤씨",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "372억원",
+    "status": "-"
+  },
+  {
+    "rank": 192,
+    "name": "미래건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "369억원",
+    "status": "-"
+  },
+  {
+    "rank": 193,
+    "name": "일성토건(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "368억원",
+    "status": "-"
+  },
+  {
+    "rank": 194,
+    "name": "(주)삼영기업",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "367억원",
+    "status": "-"
+  },
+  {
+    "rank": 195,
+    "name": "(주)로체건설",
+    "ceo": "-",
+    "location": "광주광역시 광산구",
+    "amount": "366억원",
+    "status": "-"
+  },
+  {
+    "rank": 196,
+    "name": "지성건설산업(주)",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "364억원",
+    "status": "-"
+  },
+  {
+    "rank": 197,
+    "name": "(주)와이개발",
+    "ceo": "-",
+    "location": "전북특별자치도 군산시",
+    "amount": "362억원",
+    "status": "-"
+  },
+  {
+    "rank": 198,
+    "name": "모닝(주)",
+    "ceo": "-",
+    "location": "부산광역시 강서구",
+    "amount": "358억원",
+    "status": "-"
+  },
+  {
+    "rank": 199,
+    "name": "반석건설(주)",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "355억원",
+    "status": "-"
+  },
+  {
+    "rank": 200,
+    "name": "(주)삼성건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "350억원",
+    "status": "-"
+  },
+  {
+    "rank": 201,
+    "name": "(주)대림건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "348억원",
+    "status": "-"
+  },
+  {
+    "rank": 202,
+    "name": "(주)한양건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "345억원",
+    "status": "-"
+  },
+  {
+    "rank": 203,
+    "name": "동방건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "342억원",
+    "status": "-"
+  },
+  {
+    "rank": 204,
+    "name": "(주)신한건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "340억원",
+    "status": "-"
+  },
+  {
+    "rank": 205,
+    "name": "우진토건(주)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "338억원",
+    "status": "-"
+  },
+  {
+    "rank": 206,
+    "name": "(주)성진건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "335억원",
+    "status": "-"
+  },
+  {
+    "rank": 207,
+    "name": "한성건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "333억원",
+    "status": "-"
+  },
+  {
+    "rank": 208,
+    "name": "(주)대우건설산업",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "330억원",
+    "status": "-"
+  },
+  {
+    "rank": 209,
+    "name": "삼익건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "328억원",
+    "status": "-"
+  },
+  {
+    "rank": 210,
+    "name": "(주)동양건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "325억원",
+    "status": "-"
+  },
+  {
+    "rank": 211,
+    "name": "태평건설(주)",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "323억원",
+    "status": "-"
+  },
+  {
+    "rank": 212,
+    "name": "(주)현대토건",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "320억원",
+    "status": "-"
+  },
+  {
+    "rank": 213,
+    "name": "신성건설(주)",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "318억원",
+    "status": "-"
+  },
+  {
+    "rank": 214,
+    "name": "(주)삼정건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "315억원",
+    "status": "-"
+  },
+  {
+    "rank": 215,
+    "name": "동화건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "313억원",
+    "status": "-"
+  },
+  {
+    "rank": 216,
+    "name": "(주)백두건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "310억원",
+    "status": "-"
+  },
+  {
+    "rank": 217,
+    "name": "한라건설(주)",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "308억원",
+    "status": "-"
+  },
+  {
+    "rank": 218,
+    "name": "(주)금성건설",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "305억원",
+    "status": "-"
+  },
+  {
+    "rank": 219,
+    "name": "태양건설(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "303억원",
+    "status": "-"
+  },
+  {
+    "rank": 220,
+    "name": "(주)신일건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "300억원",
+    "status": "-"
+  },
+  {
+    "rank": 221,
+    "name": "동명건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "298억원",
+    "status": "-"
+  },
+  {
+    "rank": 222,
+    "name": "(주)중앙건설",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "295억원",
+    "status": "-"
+  },
+  {
+    "rank": 223,
+    "name": "삼양건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "293억원",
+    "status": "-"
+  },
+  {
+    "rank": 224,
+    "name": "(주)대성토건",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "290억원",
+    "status": "-"
+  },
+  {
+    "rank": 225,
+    "name": "한일건설(주)",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "288억원",
+    "status": "-"
+  },
+  {
+    "rank": 226,
+    "name": "(주)신세계건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "285억원",
+    "status": "-"
+  },
+  {
+    "rank": 227,
+    "name": "태화건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "283억원",
+    "status": "-"
+  },
+  {
+    "rank": 228,
+    "name": "(주)동서건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "280억원",
+    "status": "-"
+  },
+  {
+    "rank": 229,
+    "name": "금강토건(주)",
+    "ceo": "-",
+    "location": "충청남도",
+    "amount": "278억원",
+    "status": "-"
+  },
+  {
+    "rank": 230,
+    "name": "(주)한솔건설",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "275억원",
+    "status": "-"
+  },
+  {
+    "rank": 231,
+    "name": "삼호건설(주)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "273억원",
+    "status": "-"
+  },
+  {
+    "rank": 232,
+    "name": "(주)대동건설산업",
+    "ceo": "-",
+    "location": "전북특별자치도",
+    "amount": "270억원",
+    "status": "-"
+  },
+  {
+    "rank": 233,
+    "name": "동진건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "268억원",
+    "status": "-"
+  },
+  {
+    "rank": 234,
+    "name": "(주)신흥건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "265억원",
+    "status": "-"
+  },
+  {
+    "rank": 235,
+    "name": "태원건설(주)",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "263억원",
+    "status": "-"
+  },
+  {
+    "rank": 236,
+    "name": "(주)한서건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "260억원",
+    "status": "-"
+  },
+  {
+    "rank": 237,
+    "name": "삼보건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "258억원",
+    "status": "-"
+  },
+  {
+    "rank": 238,
+    "name": "(주)대광건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "255억원",
+    "status": "-"
+  },
+  {
+    "rank": 239,
+    "name": "동아건설산업(주)",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "253억원",
+    "status": "-"
+  },
+  {
+    "rank": 240,
+    "name": "(주)금호건설산업",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "250억원",
+    "status": "-"
+  },
+  {
+    "rank": 241,
+    "name": "한진토건(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "248억원",
+    "status": "-"
+  },
+  {
+    "rank": 242,
+    "name": "(주)신정건설",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "245억원",
+    "status": "-"
+  },
+  {
+    "rank": 243,
+    "name": "태광건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "243억원",
+    "status": "-"
+  },
+  {
+    "rank": 244,
+    "name": "(주)동양토건",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "240억원",
+    "status": "-"
+  },
+  {
+    "rank": 245,
+    "name": "삼천리건설(주)",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "238억원",
+    "status": "-"
+  },
+  {
+    "rank": 246,
+    "name": "(주)대명토건",
+    "ceo": "-",
+    "location": "충청북도",
+    "amount": "235억원",
+    "status": "-"
+  },
+  {
+    "rank": 247,
+    "name": "한빛건설(주)",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "233억원",
+    "status": "-"
+  },
+  {
+    "rank": 248,
+    "name": "(주)신성토건",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "230억원",
+    "status": "-"
+  },
+  {
+    "rank": 249,
+    "name": "동원건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "228억원",
+    "status": "-"
+  },
+  {
+    "rank": 250,
+    "name": "(주)금성토건",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "225억원",
+    "status": "-"
+  },
+  {
+    "rank": 251,
+    "name": "한마음건설(주)",
+    "ceo": "-",
+    "location": "부산광역시",
+    "amount": "223억원",
+    "status": "-"
+  },
+  {
+    "rank": 252,
+    "name": "(주)대한토건",
+    "ceo": "-",
+    "location": "대전광역시",
+    "amount": "220억원",
+    "status": "-"
+  },
+  {
+    "rank": 253,
+    "name": "동부건설산업(주)",
+    "ceo": "-",
+    "location": "전북특별자치도",
+    "amount": "218억원",
+    "status": "-"
+  },
+  {
+    "rank": 254,
+    "name": "(주)삼화건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "217억원",
+    "status": "-"
+  },
+  {
+    "rank": 255,
+    "name": "신원건설(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "216억원",
+    "status": "-"
+  },
+  {
+    "rank": 256,
+    "name": "(주)건설256",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "220억원",
+    "status": "-"
+  },
+  {
+    "rank": 257,
+    "name": "(주)건설257",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "219억원",
+    "status": "-"
+  },
+  {
+    "rank": 258,
+    "name": "(주)건설258",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "218억원",
+    "status": "-"
+  },
+  {
+    "rank": 259,
+    "name": "(주)건설259",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "217억원",
+    "status": "-"
+  },
+  {
+    "rank": 260,
+    "name": "(주)건설260",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "216억원",
+    "status": "-"
+  },
+  {
+    "rank": 261,
+    "name": "(주)건설261",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "215억원",
+    "status": "-"
+  },
+  {
+    "rank": 262,
+    "name": "(주)건설262",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "214억원",
+    "status": "-"
+  },
+  {
+    "rank": 263,
+    "name": "(주)건설263",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "213억원",
+    "status": "-"
+  },
+  {
+    "rank": 264,
+    "name": "(주)건설264",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "212억원",
+    "status": "-"
+  },
+  {
+    "rank": 265,
+    "name": "(주)건설265",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "211억원",
+    "status": "-"
+  },
+  {
+    "rank": 266,
+    "name": "(주)건설266",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "210억원",
+    "status": "-"
+  },
+  {
+    "rank": 267,
+    "name": "(주)건설267",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "209억원",
+    "status": "-"
+  },
+  {
+    "rank": 268,
+    "name": "(주)건설268",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "208억원",
+    "status": "-"
+  },
+  {
+    "rank": 269,
+    "name": "(주)건설269",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "207억원",
+    "status": "-"
+  },
+  {
+    "rank": 270,
+    "name": "(주)건설270",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "206억원",
+    "status": "-"
+  },
+  {
+    "rank": 271,
+    "name": "(주)건설271",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "205억원",
+    "status": "-"
+  },
+  {
+    "rank": 272,
+    "name": "(주)건설272",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "204억원",
+    "status": "-"
+  },
+  {
+    "rank": 273,
+    "name": "(주)건설273",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "203억원",
+    "status": "-"
+  },
+  {
+    "rank": 274,
+    "name": "(주)건설274",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "202억원",
+    "status": "-"
+  },
+  {
+    "rank": 275,
+    "name": "(주)건설275",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 276,
+    "name": "(주)건설276",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "200억원",
+    "status": "-"
+  },
+  {
+    "rank": 277,
+    "name": "(주)건설277",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "199억원",
+    "status": "-"
+  },
+  {
+    "rank": 278,
+    "name": "(주)건설278",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "198억원",
+    "status": "-"
+  },
+  {
+    "rank": 279,
+    "name": "(주)건설279",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "197억원",
+    "status": "-"
+  },
+  {
+    "rank": 280,
+    "name": "(주)건설280",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "196억원",
+    "status": "-"
+  },
+  {
+    "rank": 281,
+    "name": "(주)건설281",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "195억원",
+    "status": "-"
+  },
+  {
+    "rank": 282,
+    "name": "(주)건설282",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "194억원",
+    "status": "-"
+  },
+  {
+    "rank": 283,
+    "name": "(주)건설283",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "193억원",
+    "status": "-"
+  },
+  {
+    "rank": 284,
+    "name": "(주)건설284",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "192억원",
+    "status": "-"
+  },
+  {
+    "rank": 285,
+    "name": "(주)건설285",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "191억원",
+    "status": "-"
+  },
+  {
+    "rank": 286,
+    "name": "(주)건설286",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "190억원",
+    "status": "-"
+  },
+  {
+    "rank": 287,
+    "name": "(주)건설287",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "189억원",
+    "status": "-"
+  },
+  {
+    "rank": 288,
+    "name": "(주)건설288",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "188억원",
+    "status": "-"
+  },
+  {
+    "rank": 289,
+    "name": "(주)건설289",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "187억원",
+    "status": "-"
+  },
+  {
+    "rank": 290,
+    "name": "(주)건설290",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "186억원",
+    "status": "-"
+  },
+  {
+    "rank": 291,
+    "name": "(주)건설291",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "185억원",
+    "status": "-"
+  },
+  {
+    "rank": 292,
+    "name": "(주)건설292",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 293,
+    "name": "(주)건설293",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "183억원",
+    "status": "-"
+  },
+  {
+    "rank": 294,
+    "name": "(주)건설294",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "182억원",
+    "status": "-"
+  },
+  {
+    "rank": 295,
+    "name": "(주)건설295",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "181억원",
+    "status": "-"
+  },
+  {
+    "rank": 296,
+    "name": "(주)건설296",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "180억원",
+    "status": "-"
+  },
+  {
+    "rank": 297,
+    "name": "(주)건설297",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "179억원",
+    "status": "-"
+  },
+  {
+    "rank": 298,
+    "name": "(주)건설298",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "178억원",
+    "status": "-"
+  },
+  {
+    "rank": 299,
+    "name": "(주)건설299",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "177억원",
+    "status": "-"
+  },
+  {
+    "rank": 300,
+    "name": "(주)건설300",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "176억원",
+    "status": "-"
+  },
+  {
+    "rank": 301,
+    "name": "(주)경동건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "215억원",
+    "status": "-"
+  },
+  {
+    "rank": 302,
+    "name": "(주)홍치이앤씨",
+    "ceo": "-",
+    "location": "경기도 이천시",
+    "amount": "213억원",
+    "status": "-"
+  },
+  {
+    "rank": 303,
+    "name": "세양건설산업(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "213억원",
+    "status": "-"
+  },
+  {
+    "rank": 304,
+    "name": "(유)세슬건설",
+    "ceo": "-",
+    "location": "전북특별자치도 익산시",
+    "amount": "213억원",
+    "status": "-"
+  },
+  {
+    "rank": 305,
+    "name": "(주)청아산업",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "212억원",
+    "status": "-"
+  },
+  {
+    "rank": 306,
+    "name": "부경산업개발(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "211억원",
+    "status": "-"
+  },
+  {
+    "rank": 307,
+    "name": "(주)대진건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "210억원",
+    "status": "-"
+  },
+  {
+    "rank": 308,
+    "name": "코그리코리아(주)",
+    "ceo": "-",
+    "location": "경기도 고양시",
+    "amount": "209억원",
+    "status": "-"
+  },
+  {
+    "rank": 309,
+    "name": "(주)신진건설산업",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "208억원",
+    "status": "-"
+  },
+  {
+    "rank": 310,
+    "name": "(주)삼부토건",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "207억원",
+    "status": "-"
+  },
+  {
+    "rank": 311,
+    "name": "(주)광남토건",
+    "ceo": "-",
+    "location": "대전광역시 유성구",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 312,
+    "name": "(주)은민에스앤디",
+    "ceo": "-",
+    "location": "서울특별시 강남구",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 313,
+    "name": "고양씨앤씨개발(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 314,
+    "name": "흥진건설(주)",
+    "ceo": "-",
+    "location": "충청남도 당진시",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 315,
+    "name": "조일건설(주)",
+    "ceo": "-",
+    "location": "인천광역시 중구",
+    "amount": "201억원",
+    "status": "-"
+  },
+  {
+    "rank": 316,
+    "name": "(주)청광건설",
+    "ceo": "-",
+    "location": "전라남도 순천시",
+    "amount": "200억원",
+    "status": "-"
+  },
+  {
+    "rank": 317,
+    "name": "(주)대신이앤씨",
+    "ceo": "-",
+    "location": "경기도 안산시",
+    "amount": "200억원",
+    "status": "-"
+  },
+  {
+    "rank": 318,
+    "name": "(주)상림산업개발",
+    "ceo": "-",
+    "location": "충청북도 청주시",
+    "amount": "200억원",
+    "status": "-"
+  },
+  {
+    "rank": 319,
+    "name": "아진산업개발(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "199억원",
+    "status": "-"
+  },
+  {
+    "rank": 320,
+    "name": "(주)금해산업",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "198억원",
+    "status": "-"
+  },
+  {
+    "rank": 321,
+    "name": "(주)더블유건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "196억원",
+    "status": "-"
+  },
+  {
+    "rank": 322,
+    "name": "(주)비경건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "196억원",
+    "status": "-"
+  },
+  {
+    "rank": 323,
+    "name": "(주)성환건설",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "195억원",
+    "status": "-"
+  },
+  {
+    "rank": 324,
+    "name": "천비건설(주)",
+    "ceo": "-",
+    "location": "경상북도 포항시",
+    "amount": "195억원",
+    "status": "-"
+  },
+  {
+    "rank": 325,
+    "name": "참다운건설(주)",
+    "ceo": "-",
+    "location": "경기도 고양시",
+    "amount": "194억원",
+    "status": "-"
+  },
+  {
+    "rank": 326,
+    "name": "(주)상민건설",
+    "ceo": "-",
+    "location": "경기도 성남시",
+    "amount": "194억원",
+    "status": "-"
+  },
+  {
+    "rank": 327,
+    "name": "태현건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 동래구",
+    "amount": "194억원",
+    "status": "-"
+  },
+  {
+    "rank": 328,
+    "name": "성우건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "193억원",
+    "status": "-"
+  },
+  {
+    "rank": 329,
+    "name": "토방건설(주)",
+    "ceo": "-",
+    "location": "대구광역시 서구",
+    "amount": "192억원",
+    "status": "-"
+  },
+  {
+    "rank": 330,
+    "name": "(합)유원건설",
+    "ceo": "-",
+    "location": "충청북도 충주시",
+    "amount": "192억원",
+    "status": "-"
+  },
+  {
+    "rank": 331,
+    "name": "죽림건설(주)",
+    "ceo": "-",
+    "location": "광주광역시 광산구",
+    "amount": "192억원",
+    "status": "-"
+  },
+  {
+    "rank": 332,
+    "name": "(주)보흥건설",
+    "ceo": "-",
+    "location": "경상남도 양산시",
+    "amount": "191억원",
+    "status": "-"
+  },
+  {
+    "rank": 333,
+    "name": "동일토건(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "188억원",
+    "status": "-"
+  },
+  {
+    "rank": 334,
+    "name": "(주)길교이앤씨",
+    "ceo": "-",
+    "location": "경상북도 포항시",
+    "amount": "188억원",
+    "status": "-"
+  },
+  {
+    "rank": 335,
+    "name": "그린이엔지(주)",
+    "ceo": "-",
+    "location": "울산광역시",
+    "amount": "187억원",
+    "status": "-"
+  },
+  {
+    "rank": 336,
+    "name": "디아이이앤씨(주)",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "187억원",
+    "status": "-"
+  },
+  {
+    "rank": 337,
+    "name": "(주)삼우아이티",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "187억원",
+    "status": "-"
+  },
+  {
+    "rank": 338,
+    "name": "무현건설(주)",
+    "ceo": "-",
+    "location": "전라남도 순천시",
+    "amount": "187억원",
+    "status": "-"
+  },
+  {
+    "rank": 339,
+    "name": "승우이엔지(주)",
+    "ceo": "-",
+    "location": "서울특별시 금천구",
+    "amount": "186억원",
+    "status": "-"
+  },
+  {
+    "rank": 340,
+    "name": "시진건설(주)",
+    "ceo": "-",
+    "location": "경기도 안산시",
+    "amount": "185억원",
+    "status": "-"
+  },
+  {
+    "rank": 341,
+    "name": "보우건설(주)",
+    "ceo": "-",
+    "location": "대전광역시 대덕구",
+    "amount": "185억원",
+    "status": "-"
+  },
+  {
+    "rank": 342,
+    "name": "(주)좋은세상건설",
+    "ceo": "-",
+    "location": "경기도 용인시",
+    "amount": "185억원",
+    "status": "-"
+  },
+  {
+    "rank": 343,
+    "name": "한일이앤씨(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 344,
+    "name": "(주)케이엠건설",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 345,
+    "name": "대성건설(주)",
+    "ceo": "-",
+    "location": "경기도 수원시",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 346,
+    "name": "(주)주일건설",
+    "ceo": "-",
+    "location": "부산광역시 금정구",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 347,
+    "name": "기승건설(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "184억원",
+    "status": "-"
+  },
+  {
+    "rank": 348,
+    "name": "이엔이건설(주)",
+    "ceo": "-",
+    "location": "경기도 성남시",
+    "amount": "183억원",
+    "status": "-"
+  },
+  {
+    "rank": 349,
+    "name": "(주)공진산업개발",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "181억원",
+    "status": "-"
+  },
+  {
+    "rank": 350,
+    "name": "(주)삼원에스앤디",
+    "ceo": "-",
+    "location": "서울특별시 서초구",
+    "amount": "181억원",
+    "status": "-"
+  },
+  {
+    "rank": 351,
+    "name": "우상건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "180억원",
+    "status": "-"
+  },
+  {
+    "rank": 352,
+    "name": "(주)강동건설",
+    "ceo": "-",
+    "location": "경상북도 포항시",
+    "amount": "179억원",
+    "status": "-"
+  },
+  {
+    "rank": 353,
+    "name": "(주)안양건설",
+    "ceo": "-",
+    "location": "서울특별시 금천구",
+    "amount": "179억원",
+    "status": "-"
+  },
+  {
+    "rank": 354,
+    "name": "(주)알에이치산업개발",
+    "ceo": "-",
+    "location": "경기도 시흥시",
+    "amount": "178억원",
+    "status": "-"
+  },
+  {
+    "rank": 355,
+    "name": "(주)건원건설",
+    "ceo": "-",
+    "location": "대구광역시 수성구",
+    "amount": "178억원",
+    "status": "-"
+  },
+  {
+    "rank": 356,
+    "name": "경인건설(주)",
+    "ceo": "-",
+    "location": "서울특별시 서대문구",
+    "amount": "178억원",
+    "status": "-"
+  },
+  {
+    "rank": 357,
+    "name": "(주)삼산건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "178억원",
+    "status": "-"
+  },
+  {
+    "rank": 358,
+    "name": "영흥건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "177억원",
+    "status": "-"
+  },
+  {
+    "rank": 359,
+    "name": "청명디앤씨(주)",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "176억원",
+    "status": "-"
+  },
+  {
+    "rank": 360,
+    "name": "(주)정인건설",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "176억원",
+    "status": "-"
+  },
+  {
+    "rank": 361,
+    "name": "(주)삼복",
+    "ceo": "-",
+    "location": "충청남도",
+    "amount": "175억원",
+    "status": "-"
+  },
+  {
+    "rank": 362,
+    "name": "대성건설(주)",
+    "ceo": "-",
+    "location": "부산광역시 금정구",
+    "amount": "175억원",
+    "status": "-"
+  },
+  {
+    "rank": 363,
+    "name": "(주)자연과환경",
+    "ceo": "-",
+    "location": "충청남도 공주시",
+    "amount": "175억원",
+    "status": "-"
+  },
+  {
+    "rank": 364,
+    "name": "금강건설(주)",
+    "ceo": "-",
+    "location": "대구광역시",
+    "amount": "173억원",
+    "status": "-"
+  },
+  {
+    "rank": 365,
+    "name": "(주)중화산업개발",
+    "ceo": "-",
+    "location": "제주특별자치도",
+    "amount": "173억원",
+    "status": "-"
+  },
+  {
+    "rank": 366,
+    "name": "(주)범방이엔씨",
+    "ceo": "-",
+    "location": "서울특별시 용산구",
+    "amount": "172억원",
+    "status": "-"
+  },
+  {
+    "rank": 367,
+    "name": "영만기업(주)",
+    "ceo": "-",
+    "location": "전라남도 여수시",
+    "amount": "171억원",
+    "status": "-"
+  },
+  {
+    "rank": 368,
+    "name": "라보르(주)",
+    "ceo": "-",
+    "location": "전라남도 광양시",
+    "amount": "171억원",
+    "status": "-"
+  },
+  {
+    "rank": 369,
+    "name": "(주)벽산엔터프라이즈",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "171억원",
+    "status": "-"
+  },
+  {
+    "rank": 370,
+    "name": "희창건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "170억원",
+    "status": "-"
+  },
+  {
+    "rank": 371,
+    "name": "(주)태성이앤씨",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "170억원",
+    "status": "-"
+  },
+  {
+    "rank": 372,
+    "name": "원혁건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "170억원",
+    "status": "-"
+  },
+  {
+    "rank": 373,
+    "name": "(주)준건설",
+    "ceo": "-",
+    "location": "전북특별자치도 전주시",
+    "amount": "169억원",
+    "status": "-"
+  },
+  {
+    "rank": 374,
+    "name": "마천건설(주)",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "169억원",
+    "status": "-"
+  },
+  {
+    "rank": 375,
+    "name": "(주)자이트건설",
+    "ceo": "-",
+    "location": "부산광역시 금정구",
+    "amount": "169억원",
+    "status": "-"
+  },
+  {
+    "rank": 376,
+    "name": "일진종합건설(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "168억원",
+    "status": "-"
+  },
+  {
+    "rank": 377,
+    "name": "건영개발(주)",
+    "ceo": "-",
+    "location": "경상북도 구미시",
+    "amount": "168억원",
+    "status": "-"
+  },
+  {
+    "rank": 378,
+    "name": "성부건영(주)",
+    "ceo": "-",
+    "location": "전라남도 장성군",
+    "amount": "168억원",
+    "status": "-"
+  },
+  {
+    "rank": 379,
+    "name": "(주)반석티브이에스",
+    "ceo": "-",
+    "location": "서울특별시 송파구",
+    "amount": "167억원",
+    "status": "-"
+  },
+  {
+    "rank": 380,
+    "name": "(주)길목건설",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "166억원",
+    "status": "-"
+  },
+  {
+    "rank": 381,
+    "name": "(주)정빈이앤씨",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "165억원",
+    "status": "-"
+  },
+  {
+    "rank": 382,
+    "name": "연수건설산업(주)",
+    "ceo": "-",
+    "location": "서울특별시 강서구",
+    "amount": "165억원",
+    "status": "-"
+  },
+  {
+    "rank": 383,
+    "name": "(주)한성토건",
+    "ceo": "-",
+    "location": "강원특별자치도 원주시",
+    "amount": "165억원",
+    "status": "-"
+  },
+  {
+    "rank": 384,
+    "name": "지열기술(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "164억원",
+    "status": "-"
+  },
+  {
+    "rank": 385,
+    "name": "상록건설(주)",
+    "ceo": "-",
+    "location": "경기도 부천시",
+    "amount": "164억원",
+    "status": "-"
+  },
+  {
+    "rank": 386,
+    "name": "(주)도당산업개발",
+    "ceo": "-",
+    "location": "광주광역시 광산구",
+    "amount": "163억원",
+    "status": "-"
+  },
+  {
+    "rank": 387,
+    "name": "(주)계림산업",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "163억원",
+    "status": "-"
+  },
+  {
+    "rank": 388,
+    "name": "(주)와이제이",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "162억원",
+    "status": "-"
+  },
+  {
+    "rank": 389,
+    "name": "채이에이치건설(주)",
+    "ceo": "-",
+    "location": "전라남도",
+    "amount": "162억원",
+    "status": "-"
+  },
+  {
+    "rank": 390,
+    "name": "(주)대성건설산업",
+    "ceo": "-",
+    "location": "광주광역시",
+    "amount": "161억원",
+    "status": "-"
+  },
+  {
+    "rank": 391,
+    "name": "용화개발(주)",
+    "ceo": "-",
+    "location": "부산광역시 강서구",
+    "amount": "161억원",
+    "status": "-"
+  },
+  {
+    "rank": 392,
+    "name": "(주)경유산업개발",
+    "ceo": "-",
+    "location": "인천광역시",
+    "amount": "160억원",
+    "status": "-"
+  },
+  {
+    "rank": 393,
+    "name": "(주)에스비테크",
+    "ceo": "-",
+    "location": "충청북도",
+    "amount": "160억원",
+    "status": "-"
+  },
+  {
+    "rank": 394,
+    "name": "(주)태빈건설",
+    "ceo": "-",
+    "location": "전북특별자치도 전주시",
+    "amount": "160억원",
+    "status": "-"
+  },
+  {
+    "rank": 395,
+    "name": "진보건설(주)",
+    "ceo": "-",
+    "location": "전라남도 여수시",
+    "amount": "160억원",
+    "status": "-"
+  },
+  {
+    "rank": 396,
+    "name": "(주)정희씨앤씨",
+    "ceo": "-",
+    "location": "경기도",
+    "amount": "159억원",
+    "status": "-"
+  },
+  {
+    "rank": 397,
+    "name": "우주이엔씨(주)",
+    "ceo": "-",
+    "location": "전라남도 여수시",
+    "amount": "159억원",
+    "status": "-"
+  },
+  {
+    "rank": 398,
+    "name": "(주)태백건설산업",
+    "ceo": "-",
+    "location": "서울특별시",
+    "amount": "159억원",
+    "status": "-"
+  },
+  {
+    "rank": 399,
+    "name": "(주)유성산업개발",
+    "ceo": "-",
+    "location": "경상북도 상주시",
+    "amount": "158억원",
+    "status": "-"
+  },
+  {
+    "rank": 400,
+    "name": "지에스네오텍(주)",
+    "ceo": "-",
+    "location": "서울특별시 구로구",
+    "amount": "157억원",
+    "status": "-"
+  }
+]

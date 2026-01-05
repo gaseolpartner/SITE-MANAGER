@@ -1,0 +1,242 @@
+[
+  {
+    "rank": 1,
+    "name": "(주)일신석재",
+    "ceo": "이용재 외 1명",
+    "location": "서울특별시 강동구",
+    "amount": "692억원",
+    "status": "-"
+  },
+  {
+    "rank": 2,
+    "name": "(주)순안",
+    "ceo": "김병규",
+    "location": "서울특별시 송파구",
+    "amount": "613억원",
+    "status": "-"
+  },
+  {
+    "rank": 3,
+    "name": "(주)신아석재",
+    "ceo": "구정모 외 1명",
+    "location": "서울특별시 강남구",
+    "amount": "448억원",
+    "status": "-"
+  },
+  {
+    "rank": 4,
+    "name": "선린건설(주)",
+    "ceo": "김종현",
+    "location": "광주광역시 서구",
+    "amount": "440억원",
+    "status": "-"
+  },
+  {
+    "rank": 5,
+    "name": "현대석재(주)",
+    "ceo": "노동희",
+    "location": "전라남도 화순군",
+    "amount": "388억원",
+    "status": "-"
+  },
+  {
+    "rank": 6,
+    "name": "(주)세일하우징",
+    "ceo": "윤혜련",
+    "location": "경기도 김포시",
+    "amount": "376억원",
+    "status": "-"
+  },
+  {
+    "rank": 7,
+    "name": "(주)은진산업",
+    "ceo": "김홍승",
+    "location": "광주광역시 북구",
+    "amount": "356억원",
+    "status": "-"
+  },
+  {
+    "rank": 8,
+    "name": "(주)안성산업",
+    "ceo": "김영장",
+    "location": "경기도 군포시",
+    "amount": "325억원",
+    "status": "-"
+  },
+  {
+    "rank": 9,
+    "name": "(주)한우리아이앤씨",
+    "ceo": "마기석",
+    "location": "서울특별시 강남구",
+    "amount": "321억원",
+    "status": "-"
+  },
+  {
+    "rank": 10,
+    "name": "(주)디엠티엔에스",
+    "ceo": "서동환",
+    "location": "서울특별시 영등포구",
+    "amount": "321억원",
+    "status": "-"
+  },
+  {
+    "rank": 11,
+    "name": "(주)우성에스앤씨",
+    "ceo": "설영수",
+    "location": "대전광역시 유성구",
+    "amount": "311억원",
+    "status": "-"
+  },
+  {
+    "rank": 12,
+    "name": "(주)천연기업",
+    "ceo": "심광부 외 1명",
+    "location": "경기도 포천시",
+    "amount": "305억원",
+    "status": "-"
+  },
+  {
+    "rank": 13,
+    "name": "(주)하나스톤",
+    "ceo": "김성수",
+    "location": "서울특별시 강남구",
+    "amount": "298억원",
+    "status": "-"
+  },
+  {
+    "rank": 14,
+    "name": "삼익석재(주)",
+    "ceo": "이승훈",
+    "location": "경기도 화성시",
+    "amount": "285억원",
+    "status": "-"
+  },
+  {
+    "rank": 15,
+    "name": "(주)정우석재",
+    "ceo": "송우철 외 1명",
+    "location": "부산광역시 기장군",
+    "amount": "267억원",
+    "status": "-"
+  },
+  {
+    "rank": 16,
+    "name": "옥진석건(주)",
+    "ceo": "이병환 외 1명",
+    "location": "서울특별시 송파구",
+    "amount": "261억원",
+    "status": "-"
+  },
+  {
+    "rank": 17,
+    "name": "(주)농협네트웍스",
+    "ceo": "김유경",
+    "location": "서울특별시 서대문구",
+    "amount": "257억원",
+    "status": "-"
+  },
+  {
+    "rank": 18,
+    "name": "(주)대호스톤",
+    "ceo": "은희훈",
+    "location": "서울특별시 영등포구",
+    "amount": "246억원",
+    "status": "-"
+  },
+  {
+    "rank": 19,
+    "name": "(주)국보디자인",
+    "ceo": "이영준 외 1명",
+    "location": "서울특별시 마포구",
+    "amount": "240억원",
+    "status": "-"
+  },
+  {
+    "rank": 20,
+    "name": "영인산업(주)",
+    "ceo": "권진오",
+    "location": "대전광역시 유성구",
+    "amount": "230억원",
+    "status": "-"
+  },
+  {
+    "rank": 21,
+    "name": "(주)대혜건축",
+    "ceo": "권성우 외 2명",
+    "location": "서울특별시 강남구",
+    "amount": "229억원",
+    "status": "-"
+  },
+  {
+    "rank": 22,
+    "name": "(주)거석건업",
+    "ceo": "김종필",
+    "location": "서울특별시 영등포구",
+    "amount": "222억원",
+    "status": "-"
+  },
+  {
+    "rank": 23,
+    "name": "(주)성보씨엔이",
+    "ceo": "권오돈 외 1명",
+    "location": "서울특별시 서초구",
+    "amount": "216억원",
+    "status": "-"
+  },
+  {
+    "rank": 24,
+    "name": "(주)호신석재",
+    "ceo": "신대현",
+    "location": "서울특별시 강남구",
+    "amount": "214억원",
+    "status": "-"
+  },
+  {
+    "rank": 25,
+    "name": "(주)민예",
+    "ceo": "이미선",
+    "location": "서울특별시 서초구",
+    "amount": "214억원",
+    "status": "-"
+  },
+  {
+    "rank": 26,
+    "name": "(주)수호건축",
+    "ceo": "이수진",
+    "location": "경기도 안양시",
+    "amount": "212억원",
+    "status": "-"
+  },
+  {
+    "rank": 27,
+    "name": "(주)진솔",
+    "ceo": "유재성",
+    "location": "경기도 성남시",
+    "amount": "206억원",
+    "status": "-"
+  },
+  {
+    "rank": 28,
+    "name": "흥우산업(주)",
+    "ceo": "이수대",
+    "location": "부산광역시 중구",
+    "amount": "206억원",
+    "status": "-"
+  },
+  {
+    "rank": 29,
+    "name": "(주)대동에프이",
+    "ceo": "김철현",
+    "location": "경기도 포천시",
+    "amount": "205억원",
+    "status": "-"
+  },
+  {
+    "rank": 30,
+    "name": "(주)은민에스엔디",
+    "ceo": "이승성",
+    "location": "서울특별시 강남구",
+    "amount": "201억원",
+    "status": "-"
+  }
+]
