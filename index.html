@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현장관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #334155;
+            --text-light: #64748b;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-page::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+        .login-card {
+            background: var(--card);
+            padding: 48px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            width: 420px;
+            max-width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        .login-logo { text-align: center; margin-bottom: 32px; }
+        .login-logo h1 { font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .login-logo p { color: var(--text-light); font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+        .form-textarea { min-height: 120px; resize: vertical; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--card);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent); color: white; width: 100%; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 2px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-sm { padding: 8px 16px; font-size: 13px; }
+        .toggle-link { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-light); }
+        .toggle-link a { color: var(--accent); text-decoration: none; font-weight: 600; margin-left: 4px; }
+        .toggle-link a:hover { text-decoration: underline; }
+        .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; margin-bottom: 20px; display: none; }
+        .alert-error { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+        .alert-success { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
+        .main-system { display: none; min-height: 100vh; }
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-left h1 { font-size: 18px; font-weight: 600; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .user-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 14px; }
+        .user-avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+        .header-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+        .header-btn:hover { background: rgba(255,255,255,0.2); }
+        .sync-indicator { font-size: 12px; opacity: 0.8; }
+        .sync-indicator.syncing { color: var(--warning); }
+        .sync-indicator.synced { color: var(--success); }
+        .content { padding: 24px 32px; max-width: 1440px; margin: 0 auto; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 28px; }
+        .stat-card { background: var(--card); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+        .stat-icon { width: 52px; height: 52px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-icon.yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .stat-info h3 { font-size: 28px; font-weight: 700; color: var(--primary); line-height: 1; }
+        .stat-info p { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+        .tabs-wrapper { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
+        .tabs-nav { display: flex; background: var(--bg); border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .tab-btn { padding: 16px 28px; font-size: 14px; font-weight: 500; color: var(--text-light); background: none; border: none; cursor: pointer; font-family: inherit; white-space: nowrap; transition: all 0.2s; position: relative; }
+        .tab-btn:hover { color: var(--accent); background: rgba(59,130,246,0.05); }
+        .tab-btn.active { color: var(--accent); background: var(--card); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--accent); }
+        .tab-panel { display: none; padding: 24px; }
+        .tab-panel.active { display: block; }
+        .controls-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; padding: 16px; background: var(--bg); border-radius: var(--radius-sm); }
+        .search-box { display: flex; align-items: center; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; flex: 1; max-width: 360px; transition: all 0.2s; }
+        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+        .search-box input { flex: 1; border: none; padding: 12px; font-size: 14px; font-family: inherit; background: transparent; }
+        .search-box input:focus { outline: none; }
+        .search-box span { color: var(--text-light); }
+        .filter-pills { display: flex; gap: 8px; }
+        .filter-pill { padding: 10px 18px; border: 2px solid var(--border); background: var(--card); border-radius: 20px; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s; color: var(--text); }
+        .filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 16px; text-align: left; font-size: 14px; }
+        th { background: var(--primary); color: white; font-weight: 500; white-space: nowrap; }
+        th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+        th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+        tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+        tr:hover { background: var(--bg); }
+        .company-name { font-weight: 600; color: var(--primary); }
+        .amount { font-family: 'SF Mono', Consolas, monospace; color: var(--accent); font-weight: 500; }
+        .badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; }
+        .badge-active { background: rgba(16,185,129,0.1); color: var(--success); }
+        .badge-pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+        .badge-completed { background: rgba(139,92,246,0.1); color: var(--purple); }
+        .badge-trading { background: rgba(59,130,246,0.1); color: var(--accent); }
+        .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--success)); border-radius: 4px; transition: width 0.3s; }
+        .progress-text { font-size: 12px; color: var(--text-light); margin-top: 4px; text-align: center; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal { background: var(--card); border-radius: var(--radius); width: 100%; max-width: 560px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .modal-header h2 { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; font-size: 24px; color: var(--text-light); cursor: pointer; padding: 4px; line-height: 1; }
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .loading { text-align: center; padding: 40px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .site-item { padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+        .site-info h4 { font-size: 15px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+        .site-info p { font-size: 13px; color: var(--text-light); }
+        .site-actions { display: flex; gap: 8px; }
+        .site-list { max-height: 400px; overflow-y: auto; }
+        .briefing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+        .briefing-date { display: flex; align-items: center; gap: 12px; }
+        .briefing-date h2 { font-size: 20px; font-weight: 700; color: var(--primary); }
+        .briefing-date select { padding: 8px 12px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; background: var(--card); }
+        .briefing-actions { display: flex; gap: 8px; }
+        .briefing-section { margin-bottom: 28px; }
+        .briefing-section h3 { font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .status-new { background: var(--danger); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .status-update { background: var(--warning); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .status-normal { color: var(--text-light); font-size: 12px; }
+        .analysis-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; }
+        .analysis-card h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+        .analysis-card p { font-size: 14px; color: var(--text); line-height: 1.7; }
+        .no-briefing { text-align: center; padding: 60px 20px; background: var(--bg); border-radius: var(--radius); }
+        .no-briefing .icon { font-size: 64px; margin-bottom: 16px; }
+        .no-briefing h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .no-briefing p { color: var(--text-light); margin-bottom: 20px; }
+        @media (max-width: 768px) {
+            .header { padding: 0 16px; }
+            .content { padding: 16px; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .controls-bar { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: none; }
+            .filter-pills { justify-content: center; }
+            .tab-btn { padding: 14px 20px; }
+            .briefing-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 로그인 페이지 -->
+    <div class="login-page" id="loginPage">
+        <div class="login-card">
+            <div class="login-logo">
+                <h1>🏗️ 현장관리 시스템</h1>
+                <p id="formTitle">시스템에 로그인하세요</p>
+            </div>
+            <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">아이디</label>
+                    <input type="text" class="form-input" id="loginId" placeholder="아이디를 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" class="form-input" id="loginPw" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <button type="submit" class="btn btn-primary">로그인</button>
+            </form>
+            <form id="registerForm" style="display:none" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">이름</label>
+                    <input type="text" class="form-input" id="regName" placeholder="이름" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">아이디</label>
+                    <input type="text" class="form-input" id="regId" placeholder="아이디" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" class="form-input" id="regPw" placeholder="비밀번호" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호 확인</label>
+                    <input type="password" class="form-input" id="regPwConfirm" placeholder="비밀번호 확인" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">부서</label>
+                    <input type="text" class="form-input" id="regDept" placeholder="부서 (선택)">
+                </div>
+                <button type="submit" class="btn btn-primary">회원가입</button>
+            </form>
+            <div class="toggle-link">
+                <span id="toggleText">계정이 없으신가요?</span>
+                <a href="#" onclick="toggleAuthForm(); return false;" id="toggleLink">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 시스템 -->
+    <div class="main-system" id="mainSystem">
+        <header class="header">
+            <div class="header-left">
+                <h1>🏗️ 현장관리 시스템</h1>
+                <span class="sync-indicator" id="syncIndicator">● 연결됨</span>
+            </div>
+            <div class="header-right">
+                <div class="user-badge">
+                    <div class="user-avatar" id="userAvatar">관</div>
+                    <span id="userName">관리자</span>
+                </div>
+                <div id="adminBtns" style="display:none">
+                    <button class="header-btn" onclick="openUserModal()">👥 회원관리</button>
+                </div>
+                <button class="header-btn" onclick="logout()">로그아웃</button>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="filterByStatus('all')">
+                    <div class="stat-icon blue">📊</div>
+                    <div class="stat-info"><h3 id="totalCount">0</h3><p>전체 현장</p></div>
+                </div>
+                <div class="stat-card" onclick="filterByStatus('active')">
+                    <div class="stat-icon green">🚧</div>
+                    <div class="stat-info"><h3 id="activeCount">0</h3><p>진행중</p></div>
+                </div>
+                <div class="stat-card" onclick="filterByStatus('pending')">
+                    <div class="stat-icon yellow">⏳</div>
+                    <div class="stat-info"><h3 id="pendingCount">0</h3><p>대기중</p></div>
+                </div>
+                <div class="stat-card" onclick="filterByStatus('completed')">
+                    <div class="stat-icon purple">✅</div>
+                    <div class="stat-info"><h3 id="completedCount">0</h3><p>완료</p></div>
+                </div>
+            </div>
+
+            <div class="tabs-wrapper">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" onclick="switchTab('briefing', this)">📋 일일 브리핑</button>
+                    <button class="tab-btn" onclick="switchTab('all', this)">🏗️ 전체 현장</button>
+                    <button class="tab-btn" onclick="switchTab('concrete', this)">🏢 철근콘크리트 <span id="concreteCount" style="opacity:0.7">(0)</span></button>
+                    <button class="tab-btn" onclick="switchTab('stone', this)">🪨 석공사 <span id="stoneCount" style="opacity:0.7">(0)</span></button>
+                </div>
+
+                <!-- 일일 브리핑 탭 -->
+                <div class="tab-panel active" id="panel-briefing">
+                    <div class="briefing-header">
+                        <div class="briefing-date">
+                            <h2>📅 <span id="briefingDateDisplay">오늘</span></h2>
+                            <select id="briefingDateSelect" onchange="loadBriefing(this.value)"></select>
+                        </div>
+                        <div class="briefing-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openPasteModal()">📋 붙여넣기로 추가</button>
+                        </div>
+                    </div>
+                    <div id="briefingContent"></div>
+                </div>
+
+                <!-- 전체 현장 탭 -->
+                <div class="tab-panel" id="panel-all">
+                    <div class="controls-bar">
+                        <div class="search-box">
+                            <span>🔍</span>
+                            <input type="text" id="searchAll" placeholder="현장명, 업체명 검색..." oninput="searchSites()">
+                        </div>
+                        <div class="filter-pills">
+                            <button class="filter-pill active" onclick="setFilter(this, 'all')">전체</button>
+                            <button class="filter-pill" onclick="setFilter(this, 'active')">진행중</button>
+                            <button class="filter-pill" onclick="setFilter(this, 'pending')">대기중</button>
+                            <button class="filter-pill" onclick="setFilter(this, 'completed')">완료</button>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="openQuickAddModal()">➕ 현장 추가</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>No</th><th>현장명</th><th>업체명</th><th>구분</th><th>담당자</th><th>연락처</th><th>계약금액</th><th style="width:140px">진행률</th><th>상태</th><th>관리</th></tr></thead>
+                            <tbody id="allSitesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 철근콘크리트 탭 -->
+                <div class="tab-panel" id="panel-concrete">
+                    <div class="controls-bar">
+                        <div class="search-box"><span>🔍</span><input type="text" id="searchConcrete" placeholder="업체명, 대표자 검색..." oninput="renderConcreteTable()"></div>
+                        <div class="filter-pills">
+                            <button class="filter-pill active" onclick="setConcreteFilter(this, 'all')">전체</button>
+                            <button class="filter-pill" onclick="setConcreteFilter(this, 'trading')">거래중</button>
+                        </div>
+                    </div>
+                    <div class="table-container" id="concreteTableContainer"><div class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div></div>
+                </div>
+
+                <!-- 석공사 탭 -->
+                <div class="tab-panel" id="panel-stone">
+                    <div class="controls-bar">
+                        <div class="search-box"><span>🔍</span><input type="text" id="searchStone" placeholder="업체명, 대표자 검색..." oninput="renderStoneTable()"></div>
+                        <div class="filter-pills">
+                            <button class="filter-pill active" onclick="setStoneFilter(this, 'all')">전체</button>
+                            <button class="filter-pill" onclick="setStoneFilter(this, 'trading')">거래중</button>
+                        </div>
+                    </div>
+                    <div class="table-container" id="stoneTableContainer"><div class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달들 -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header"><h2>👥 회원 관리</h2><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div>
+            <div class="modal-body"><div class="site-list" id="userList"></div></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="companyModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="companyModalTitle">업체 현장 관리</h2><button class="modal-close" onclick="closeModal('companyModal')">&times;</button></div>
+            <div class="modal-body">
+                <button class="btn btn-success" style="width:100%;margin-bottom:16px" onclick="addSiteToCompany()">➕ 새 현장 추가</button>
+                <div class="site-list" id="companySiteList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="siteModal">
+        <div class="modal">
+            <div class="modal-header"><h2 id="siteModalTitle">현장 정보</h2><button class="modal-close" onclick="closeModal('siteModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">현장명 *</label><input type="text" class="form-input" id="siteName" placeholder="현장명"></div>
+                <div class="form-group"><label class="form-label">현장 주소</label><input type="text" class="form-input" id="siteAddr" placeholder="주소"></div>
+                <div class="form-group"><label class="form-label">담당자</label><input type="text" class="form-input" id="siteManager" placeholder="담당자명"></div>
+                <div class="form-group"><label class="form-label">연락처</label><input type="text" class="form-input" id="sitePhone" placeholder="연락처"></div>
+                <div class="form-group"><label class="form-label">계약금액</label><input type="text" class="form-input" id="siteAmount" placeholder="예: 5억원"></div>
+                <div class="form-group"><label class="form-label">진행률 (%)</label><input type="number" class="form-input" id="siteProgress" min="0" max="100" value="0"></div>
+                <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="siteStatus"><option value="active">진행중</option><option value="pending">대기중</option><option value="completed">완료</option></select></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('siteModal')">취소</button><button class="btn btn-primary" onclick="saveSite()">저장</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="quickAddModal">
+        <div class="modal">
+            <div class="modal-header"><h2>➕ 빠른 현장 추가</h2><button class="modal-close" onclick="closeModal('quickAddModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">공사 구분 *</label><select class="form-select" id="quickType" onchange="updateQuickCompanyList()"><option value="">선택하세요</option><option value="concrete">철근콘크리트</option><option value="stone">석공사</option></select></div>
+                <div class="form-group"><label class="form-label">업체 *</label><select class="form-select" id="quickCompany"><option value="">먼저 공사 구분을 선택하세요</option></select></div>
+                <div class="form-group"><label class="form-label">현장명 *</label><input type="text" class="form-input" id="quickSiteName" placeholder="현장명"></div>
+                <div class="form-group"><label class="form-label">현장 주소</label><input type="text" class="form-input" id="quickAddr" placeholder="주소"></div>
+                <div class="form-group"><label class="form-label">담당자</label><input type="text" class="form-input" id="quickManager" placeholder="담당자명"></div>
+                <div class="form-group"><label class="form-label">연락처</label><input type="text" class="form-input" id="quickPhone" placeholder="연락처"></div>
+                <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="quickStatus"><option value="active">진행중</option><option value="pending">대기중</option></select></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('quickAddModal')">취소</button><button class="btn btn-primary" onclick="saveQuickSite()">저장</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="pasteModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header"><h2>📋 브리핑 붙여넣기</h2><button class="modal-close" onclick="closeModal('pasteModal')">&times;</button></div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: var(--text-light); font-size: 14px;">Gemini에서 받은 브리핑 내용을 그대로 붙여넣으세요. 자동으로 저장됩니다.</p>
+                <div class="form-group"><label class="form-label">브리핑 날짜</label><input type="date" class="form-input" id="pasteDate"></div>
+                <div class="form-group"><label class="form-label">브리핑 내용</label><textarea class="form-textarea" id="pasteContent" rows="15" placeholder="여기에 브리핑 내용을 붙여넣으세요..."></textarea></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('pasteModal')">취소</button><button class="btn btn-primary" onclick="savePastedBriefing()">저장</button></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 🔧 Supabase 설정 - 여기에 본인 정보 입력!
+        // ============================================
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';  // 예: https://xxxxx.supabase.co
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';  // Settings > API > anon public
+        
+        // Supabase 클라이언트 초기화
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // ============================================
+        // 데이터
+        // ============================================
+        let currentUser = null;
+        let users = [];
+        let sites = [];
+        let briefings = {};
+        let concreteCompanies = [];
+        let stoneCompanies = [];
+        let companyStatus = {};
+        let currentFilter = 'all';
+        let concreteFilter = 'all';
+        let stoneFilter = 'all';
+        let editingCompanyType = '';
+        let editingCompanyName = '';
+        let editingSiteId = null;
+
+        // ============================================
+        // 초기화
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCompanyDataFromJSON();
+            checkAutoLogin();
+            initBriefingDates();
+        });
+
+        async function loadCompanyDataFromJSON() {
+            try {
+                const [concreteRes, stoneRes] = await Promise.all([
+                    fetch('./data/concrete.json'),
+                    fetch('./data/stone.json')
+                ]);
+                if (concreteRes.ok) concreteCompanies = await concreteRes.json();
+                if (stoneRes.ok) stoneCompanies = await stoneRes.json();
+                
+                // DB에서 상태 불러오기
+                await loadCompanyStatusFromDB();
+                
+                document.getElementById('concreteCount').textContent = `(${concreteCompanies.length})`;
+                document.getElementById('stoneCount').textContent = `(${stoneCompanies.length})`;
+            } catch (error) {
+                console.error('업체 데이터 로드 실패:', error);
+            }
+        }
+
+        async function loadCompanyStatusFromDB() {
+            try {
+                const { data, error } = await supabase.from('company_status').select('*');
+                if (data) {
+                    data.forEach(item => {
+                        const list = item.company_type === 'concrete' ? concreteCompanies : stoneCompanies;
+                        const company = list.find(c => c.name === item.company_name);
+                        if (company) company.status = item.status;
+                    });
+                }
+            } catch (e) { console.log('상태 로드 스킵'); }
+        }
+
+        function checkAutoLogin() {
+            const saved = localStorage.getItem('sm_currentUser');
+            if (saved) { currentUser = JSON.parse(saved); showMainSystem(); }
+        }
+
+        // ============================================
+        // 인증
+        // ============================================
+        function toggleAuthForm() {
+            const login = document.getElementById('loginForm');
+            const register = document.getElementById('registerForm');
+            if (login.style.display !== 'none') {
+                login.style.display = 'none'; register.style.display = 'block';
+                document.getElementById('formTitle').textContent = '새 계정 만들기';
+                document.getElementById('toggleText').textContent = '이미 계정이 있으신가요?';
+                document.getElementById('toggleLink').textContent = '로그인';
+            } else {
+                login.style.display = 'block'; register.style.display = 'none';
+                document.getElementById('formTitle').textContent = '시스템에 로그인하세요';
+                document.getElementById('toggleText').textContent = '계정이 없으신가요?';
+                document.getElementById('toggleLink').textContent = '회원가입';
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const id = document.getElementById('loginId').value;
+            const pw = document.getElementById('loginPw').value;
+            
+            setSyncStatus('syncing');
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('user_id', id)
+                    .eq('password', pw)
+                    .single();
+                
+                if (data) {
+                    currentUser = data;
+                    localStorage.setItem('sm_currentUser', JSON.stringify(data));
+                    setSyncStatus('synced');
+                    showMainSystem();
+                } else {
+                    showAlert('error', '아이디 또는 비밀번호가 올바르지 않습니다.');
+                    setSyncStatus('synced');
+                }
+            } catch (error) {
+                showAlert('error', '로그인 중 오류가 발생했습니다.');
+                setSyncStatus('synced');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const id = document.getElementById('regId').value;
+            const pw = document.getElementById('regPw').value;
+            const pwConfirm = document.getElementById('regPwConfirm').value;
+            const dept = document.getElementById('regDept').value;
+            
+            if (pw !== pwConfirm) { showAlert('error', '비밀번호가 일치하지 않습니다.'); return; }
+            
+            setSyncStatus('syncing');
+            try {
+                const { data, error } = await supabase.from('users').insert([
+                    { user_id: id, password: pw, name: name, role: 'user', department: dept || '미지정' }
+                ]);
+                
+                if (error) {
+                    if (error.code === '23505') showAlert('error', '이미 사용중인 아이디입니다.');
+                    else showAlert('error', '회원가입 중 오류가 발생했습니다.');
+                } else {
+                    showAlert('success', '회원가입이 완료되었습니다!');
+                    setTimeout(toggleAuthForm, 1500);
+                }
+            } catch (error) {
+                showAlert('error', '회원가입 중 오류가 발생했습니다.');
+            }
+            setSyncStatus('synced');
+        }
+
+        function logout() { 
+            if (confirm('로그아웃 하시겠습니까?')) { 
+                currentUser = null; 
+                localStorage.removeItem('sm_currentUser'); 
+                location.reload(); 
+            } 
+        }
+
+        function showAlert(type, msg) { 
+            const alert = document.getElementById(type === 'error' ? 'errorAlert' : 'successAlert'); 
+            alert.textContent = msg; 
+            alert.style.display = 'block'; 
+            setTimeout(() => alert.style.display = 'none', 3000); 
+        }
+
+        function setSyncStatus(status) {
+            const indicator = document.getElementById('syncIndicator');
+            if (status === 'syncing') {
+                indicator.textContent = '● 동기화 중...';
+                indicator.className = 'sync-indicator syncing';
+            } else {
+                indicator.textContent = '● 연결됨';
+                indicator.className = 'sync-indicator synced';
+            }
+        }
+
+        // ============================================
+        // 메인 시스템
+        // ============================================
+        async function showMainSystem() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainSystem').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0);
+            if (currentUser.role === 'admin') document.getElementById('adminBtns').style.display = 'block';
+            
+            await loadAllData();
+            renderAll();
+            await loadBriefingFromDB();
+        }
+
+        async function loadAllData() {
+            setSyncStatus('syncing');
+            try {
+                // 현장 데이터 로드
+                const { data: sitesData } = await supabase.from('sites').select('*').order('created_at', { ascending: false });
+                if (sitesData) sites = sitesData;
+                
+                // 사용자 데이터 로드 (관리자용)
+                if (currentUser.role === 'admin') {
+                    const { data: usersData } = await supabase.from('users').select('*');
+                    if (usersData) users = usersData;
+                }
+            } catch (e) { console.error('데이터 로드 오류:', e); }
+            setSyncStatus('synced');
+        }
+
+        function renderAll() { renderAllSites(); renderConcreteTable(); renderStoneTable(); updateCounts(); }
+        
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + tabId).classList.add('active');
+        }
+
+        // ============================================
+        // 브리핑 (Supabase 연동)
+        // ============================================
+        function initBriefingDates() {
+            const select = document.getElementById('briefingDateSelect');
+            const today = new Date();
+            select.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today); date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                const option = document.createElement('option');
+                option.value = dateStr;
+                option.textContent = formatDateKorean(date);
+                select.appendChild(option);
+            }
+            document.getElementById('pasteDate').value = today.toISOString().split('T')[0];
+        }
+
+        function formatDateKorean(date) {
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${days[date.getDay()]})`;
+        }
+
+        async function loadBriefingFromDB(dateStr) {
+            if (!dateStr) dateStr = new Date().toISOString().split('T')[0];
+            document.getElementById('briefingDateDisplay').textContent = formatDateKorean(new Date(dateStr));
+            
+            setSyncStatus('syncing');
+            try {
+                const { data, error } = await supabase
+                    .from('briefings')
+                    .select('*')
+                    .eq('date', dateStr)
+                    .single();
+                
+                if (data) {
+                    briefings[dateStr] = data;
+                    renderBriefing(dateStr);
+                } else {
+                    renderBriefing(dateStr); // 빈 상태 표시
+                }
+            } catch (e) { 
+                renderBriefing(dateStr); 
+            }
+            setSyncStatus('synced');
+        }
+
+        function loadBriefing(dateStr) {
+            loadBriefingFromDB(dateStr);
+        }
+
+        function renderBriefing(dateStr) {
+            if (!dateStr) dateStr = new Date().toISOString().split('T')[0];
+            const data = briefings[dateStr];
+            const container = document.getElementById('briefingContent');
+
+            if (!data || !data.raw_content) {
+                container.innerHTML = `<div class="no-briefing"><div class="icon">📭</div><h3>등록된 브리핑이 없습니다</h3><p>이 날짜에 브리핑을 추가해보세요.</p><button class="btn btn-primary" onclick="openPasteModal()">📋 붙여넣기로 추가</button></div>`;
+                return;
+            }
+
+            let html = data.raw_content
+                .replace(/^### (.+)$/gm, '<h3 style="margin: 20px 0 12px; color: var(--primary);">$1</h3>')
+                .replace(/^## (.+)$/gm, '<h2 style="margin: 24px 0 16px; color: var(--primary);">$1</h2>')
+                .replace(/^# (.+)$/gm, '<h1 style="margin: 28px 0 20px; color: var(--primary);">$1</h1>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`\[NEW\]`/g, '<span class="status-new">NEW</span>')
+                .replace(/`\[UPDATE\]`/g, '<span class="status-update">UPDATE</span>')
+                .replace(/`\[-\]`/g, '<span class="status-normal">-</span>')
+                .replace(/`([^`]+)`/g, '<code style="background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 13px;">$1</code>')
+                .replace(/^- (.+)$/gm, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>')
+                .replace(/^\* (.+)$/gm, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>')
+                .replace(/\n/g, '<br>');
+
+            container.innerHTML = `<div class="analysis-card" style="background: white; padding: 24px; line-height: 1.8;">${html}</div>`;
+        }
+
+        function openPasteModal() {
+            document.getElementById('pasteContent').value = '';
+            document.getElementById('pasteDate').value = new Date().toISOString().split('T')[0];
+            openModal('pasteModal');
+        }
+
+        async function savePastedBriefing() {
+            const dateStr = document.getElementById('pasteDate').value;
+            const content = document.getElementById('pasteContent').value;
+            if (!dateStr) { alert('날짜를 선택해주세요.'); return; }
+            if (!content.trim()) { alert('브리핑 내용을 입력해주세요.'); return; }
+
+            setSyncStatus('syncing');
+            try {
+                // Upsert (있으면 업데이트, 없으면 생성)
+                const { data, error } = await supabase
+                    .from('briefings')
+                    .upsert({ 
+                        date: dateStr, 
+                        raw_content: content,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'date' });
+
+                if (error) throw error;
+                
+                briefings[dateStr] = { date: dateStr, raw_content: content };
+                closeModal('pasteModal');
+                document.getElementById('briefingDateSelect').value = dateStr;
+                loadBriefing(dateStr);
+                alert('브리핑이 저장되었습니다!');
+            } catch (error) {
+                console.error('저장 오류:', error);
+                alert('저장 중 오류가 발생했습니다.');
+            }
+            setSyncStatus('synced');
+        }
+
+        // ============================================
+        // 현장 관리 (Supabase 연동)
+        // ============================================
+        function renderAllSites() {
+            const tbody = document.getElementById('allSitesTable');
+            const searchTerm = document.getElementById('searchAll').value.toLowerCase();
+            
+            let filtered = sites.filter(s => {
+                const matchSearch = s.site_name.toLowerCase().includes(searchTerm) || s.company_name.toLowerCase().includes(searchTerm);
+                const matchFilter = currentFilter === 'all' || s.status === currentFilter;
+                return matchSearch && matchFilter;
+            });
+
+            const order = { active: 0, pending: 1, completed: 2 };
+            filtered.sort((a, b) => order[a.status || 'active'] - order[b.status || 'active']);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="icon">📋</div><h3>등록된 현장이 없습니다</h3><p>새 현장을 추가해보세요</p></div></td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((s, i) => {
+                const statusClass = s.status === 'completed' ? 'badge-completed' : s.status === 'pending' ? 'badge-pending' : 'badge-active';
+                const statusText = s.status === 'completed' ? '완료' : s.status === 'pending' ? '대기중' : '진행중';
+                const typeText = s.company_type === 'concrete' ? '철근콘크리트' : '석공사';
+                return `<tr><td>${i + 1}</td><td class="company-name">${s.site_name}</td><td>${s.company_name}</td><td>${typeText}</td><td>${s.manager || '-'}</td><td>${s.phone || '-'}</td><td class="amount">${s.amount || '-'}</td><td><div class="progress-bar"><div class="progress-fill" style="width:${s.progress || 0}%"></div></div><div class="progress-text">${s.progress || 0}%</div></td><td><span class="badge ${statusClass}">${statusText}</span></td><td><button class="btn btn-secondary btn-sm" onclick="editSiteById('${s.id}')">수정</button> <button class="btn btn-danger btn-sm" onclick="deleteSiteById('${s.id}')">삭제</button></td></tr>`;
+            }).join('');
+        }
+
+        function searchSites() { renderAllSites(); }
+        function setFilter(btn, filter) {
+            document.querySelectorAll('#panel-all .filter-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active'); currentFilter = filter; renderAllSites();
+        }
+        function filterByStatus(status) {
+            currentFilter = status;
+            switchTab('all', document.querySelectorAll('.tab-btn')[1]);
+            renderAllSites();
+        }
+
+        function updateCounts() {
+            const total = sites.length;
+            const active = sites.filter(s => s.status === 'active' || !s.status).length;
+            const pending = sites.filter(s => s.status === 'pending').length;
+            const completed = sites.filter(s => s.status === 'completed').length;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('completedCount').textContent = completed;
+        }
+
+        // 업체 테이블
+        function renderConcreteTable() {
+            const container = document.getElementById('concreteTableContainer');
+            const search = document.getElementById('searchConcrete').value.toLowerCase();
+            let filtered = concreteCompanies.filter(c => {
+                const matchSearch = c.name.toLowerCase().includes(search) || (c.ceo && c.ceo.toLowerCase().includes(search));
+                const matchFilter = concreteFilter === 'all' || c.status === '거래중';
+                return matchSearch && matchFilter;
+            });
+            if (filtered.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">🏢</div><h3>검색 결과 없음</h3></div>'; return; }
+            
+            container.innerHTML = `<table><thead><tr><th>순위</th><th>업체명</th><th>대표자</th><th>소재지</th><th>시공능력평가</th><th>상태</th><th>현장</th></tr></thead><tbody>${filtered.map(c => {
+                const siteCount = sites.filter(s => s.company_type === 'concrete' && s.company_name === c.name).length;
+                return `<tr><td>${c.rank}</td><td class="company-name">${c.name}</td><td>${c.ceo || '-'}</td><td>${c.location || '-'}</td><td class="amount">${c.amount || '-'}</td><td><select onchange="updateCompanyStatusDB('concrete', '${c.name}', this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-" ${c.status !== '거래중' ? 'selected' : ''}>-</option><option value="거래중" ${c.status === '거래중' ? 'selected' : ''}>거래중</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal('concrete', '${c.name}')">${siteCount > 0 ? `${siteCount}개 현장` : '현장 추가'}</button></td></tr>`;
+            }).join('')}</tbody></table>`;
+        }
+
+        function renderStoneTable() {
+            const container = document.getElementById('stoneTableContainer');
+            const search = document.getElementById('searchStone').value.toLowerCase();
+            let filtered = stoneCompanies.filter(c => {
+                const matchSearch = c.name.toLowerCase().includes(search) || (c.ceo && c.ceo.toLowerCase().includes(search));
+                const matchFilter = stoneFilter === 'all' || c.status === '거래중';
+                return matchSearch && matchFilter;
+            });
+            if (filtered.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">🪨</div><h3>검색 결과 없음</h3></div>'; return; }
+            
+            container.innerHTML = `<table><thead><tr><th>순위</th><th>업체명</th><th>대표자</th><th>소재지</th><th>시공능력평가</th><th>상태</th><th>현장</th></tr></thead><tbody>${filtered.map(c => {
+                const siteCount = sites.filter(s => s.company_type === 'stone' && s.company_name === c.name).length;
+                return `<tr><td>${c.rank}</td><td class="company-name">${c.name}</td><td>${c.ceo || '-'}</td><td>${c.location || '-'}</td><td class="amount">${c.amount || '-'}</td><td><select onchange="updateCompanyStatusDB('stone', '${c.name}', this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-" ${c.status !== '거래중' ? 'selected' : ''}>-</option><option value="거래중" ${c.status === '거래중' ? 'selected' : ''}>거래중</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal('stone', '${c.name}')">${siteCount > 0 ? `${siteCount}개 현장` : '현장 추가'}</button></td></tr>`;
+            }).join('')}</tbody></table>`;
+        }
+
+        function setConcreteFilter(btn, filter) { document.querySelectorAll('#panel-concrete .filter-pill').forEach(p => p.classList.remove('active')); btn.classList.add('active'); concreteFilter = filter; renderConcreteTable(); }
+        function setStoneFilter(btn, filter) { document.querySelectorAll('#panel-stone .filter-pill').forEach(p => p.classList.remove('active')); btn.classList.add('active'); stoneFilter = filter; renderStoneTable(); }
+
+        async function updateCompanyStatusDB(type, name, status) {
+            const list = type === 'concrete' ? concreteCompanies : stoneCompanies;
+            const company = list.find(c => c.name === name);
+            if (company) company.status = status;
+            
+            try {
+                await supabase.from('company_status').upsert({
+                    company_type: type,
+                    company_name: name,
+                    status: status,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'company_type,company_name' });
+            } catch (e) { console.error('상태 저장 오류:', e); }
+        }
+
+        // 모달
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function openCompanyModal(type, name) {
+            editingCompanyType = type;
+            editingCompanyName = name;
+            document.getElementById('companyModalTitle').textContent = name + ' 현장 관리';
+            renderCompanySites();
+            openModal('companyModal');
+        }
+
+        function renderCompanySites() {
+            const list = sites.filter(s => s.company_type === editingCompanyType && s.company_name === editingCompanyName);
+            const container = document.getElementById('companySiteList');
+            if (list.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><h3>등록된 현장 없음</h3></div>'; return; }
+            container.innerHTML = list.map(s => {
+                const statusText = s.status === 'completed' ? '완료' : s.status === 'pending' ? '대기중' : '진행중';
+                return `<div class="site-item"><div class="site-info"><h4>${s.site_name}</h4><p>${s.address || '주소 미등록'} | ${statusText} | 진행률 ${s.progress || 0}%</p></div><div class="site-actions"><button class="btn btn-secondary btn-sm" onclick="editSiteById('${s.id}')">수정</button><button class="btn btn-danger btn-sm" onclick="deleteSiteById('${s.id}')">삭제</button></div></div>`;
+            }).join('');
+        }
+
+        function addSiteToCompany() { editingSiteId = null; clearSiteForm(); document.getElementById('siteModalTitle').textContent = '새 현장 추가'; openModal('siteModal'); }
+        
+        function editSiteById(id) {
+            const site = sites.find(s => s.id === id);
+            if (!site) return;
+            editingSiteId = id;
+            editingCompanyType = site.company_type;
+            editingCompanyName = site.company_name;
+            document.getElementById('siteName').value = site.site_name || '';
+            document.getElementById('siteAddr').value = site.address || '';
+            document.getElementById('siteManager').value = site.manager || '';
+            document.getElementById('sitePhone').value = site.phone || '';
+            document.getElementById('siteAmount').value = site.amount || '';
+            document.getElementById('siteProgress').value = site.progress || 0;
+            document.getElementById('siteStatus').value = site.status || 'active';
+            document.getElementById('siteModalTitle').textContent = '현장 정보 수정';
+            openModal('siteModal');
+        }
+
+        function clearSiteForm() { 
+            ['siteName', 'siteAddr', 'siteManager', 'sitePhone', 'siteAmount'].forEach(id => document.getElementById(id).value = ''); 
+            document.getElementById('siteProgress').value = 0; 
+            document.getElementById('siteStatus').value = 'active'; 
+        }
+
+        async function saveSite() {
+            const name = document.getElementById('siteName').value.trim();
+            if (!name) { alert('현장명을 입력하세요'); return; }
+            
+            const data = {
+                company_type: editingCompanyType,
+                company_name: editingCompanyName,
+                site_name: name,
+                address: document.getElementById('siteAddr').value.trim(),
+                manager: document.getElementById('siteManager').value.trim(),
+                phone: document.getElementById('sitePhone').value.trim(),
+                amount: document.getElementById('siteAmount').value.trim(),
+                progress: parseInt(document.getElementById('siteProgress').value) || 0,
+                status: document.getElementById('siteStatus').value,
+                updated_at: new Date().toISOString()
+            };
+
+            setSyncStatus('syncing');
+            try {
+                if (editingSiteId) {
+                    await supabase.from('sites').update(data).eq('id', editingSiteId);
+                } else {
+                    await supabase.from('sites').insert([data]);
+                }
+                await loadAllData();
+                closeModal('siteModal');
+                renderCompanySites();
+                renderAll();
+            } catch (e) { 
+                console.error('저장 오류:', e); 
+                alert('저장 중 오류가 발생했습니다.');
+            }
+            setSyncStatus('synced');
+        }
+
+        async function deleteSiteById(id) {
+            if (!confirm('이 현장을 삭제하시겠습니까?')) return;
+            
+            setSyncStatus('syncing');
+            try {
+                await supabase.from('sites').delete().eq('id', id);
+                await loadAllData();
+                renderCompanySites();
+                renderAll();
+            } catch (e) { console.error('삭제 오류:', e); }
+            setSyncStatus('synced');
+        }
+
+        // 빠른 현장 추가
+        function openQuickAddModal() { 
+            document.getElementById('quickType').value = ''; 
+            document.getElementById('quickCompany').innerHTML = '<option value="">먼저 공사 구분을 선택하세요</option>'; 
+            ['quickSiteName', 'quickAddr', 'quickManager', 'quickPhone'].forEach(id => document.getElementById(id).value = ''); 
+            document.getElementById('quickStatus').value = 'active'; 
+            openModal('quickAddModal'); 
+        }
+        
+        function updateQuickCompanyList() {
+            const type = document.getElementById('quickType').value;
+            const select = document.getElementById('quickCompany');
+            if (!type) { select.innerHTML = '<option value="">먼저 공사 구분을 선택하세요</option>'; return; }
+            const list = type === 'concrete' ? concreteCompanies : stoneCompanies;
+            let html = '<option value="">업체를 선택하세요</option>';
+            list.filter(c => c.status === '거래중').forEach(c => { html += `<option value="${c.name}">${c.name} (거래중)</option>`; });
+            list.filter(c => c.status !== '거래중').forEach(c => { html += `<option value="${c.name}">${c.name}</option>`; });
+            select.innerHTML = html;
+        }
+
+        async function saveQuickSite() {
+            const type = document.getElementById('quickType').value;
+            const company = document.getElementById('quickCompany').value;
+            const name = document.getElementById('quickSiteName').value.trim();
+            if (!type || !company || !name) { alert('공사 구분, 업체, 현장명은 필수입니다.'); return; }
+            
+            editingCompanyType = type;
+            editingCompanyName = company;
+            editingSiteId = null;
+            
+            const data = {
+                company_type: type,
+                company_name: company,
+                site_name: name,
+                address: document.getElementById('quickAddr').value.trim(),
+                manager: document.getElementById('quickManager').value.trim(),
+                phone: document.getElementById('quickPhone').value.trim(),
+                amount: '',
+                progress: 0,
+                status: document.getElementById('quickStatus').value
+            };
+
+            setSyncStatus('syncing');
+            try {
+                await supabase.from('sites').insert([data]);
+                await loadAllData();
+                closeModal('quickAddModal');
+                renderAll();
+                alert('현장이 추가되었습니다!');
+            } catch (e) { 
+                console.error('저장 오류:', e); 
+                alert('저장 중 오류가 발생했습니다.');
+            }
+            setSyncStatus('synced');
+        }
+
+        // 회원 관리
+        function openUserModal() { renderUserList(); openModal('userModal'); }
+        function renderUserList() {
+            const container = document.getElementById('userList');
+            container.innerHTML = users.map(u => {
+                const roleClass = u.role === 'admin' ? 'badge-trading' : 'badge-active';
+                const roleText = u.role === 'admin' ? '관리자' : '사용자';
+                return `<div class="site-item"><div class="site-info"><h4>${u.name} <span class="badge ${roleClass}">${roleText}</span></h4><p>ID: ${u.user_id} | 부서: ${u.department || '미지정'}</p></div><div class="site-actions">${u.user_id !== 'baekop99' ? `<button class="btn btn-secondary btn-sm" onclick="toggleRoleDB('${u.id}', '${u.role}')">${u.role === 'admin' ? '사용자로' : '관리자로'}</button><button class="btn btn-danger btn-sm" onclick="deleteUserDB('${u.id}')">삭제</button>` : ''}</div></div>`;
+            }).join('');
+        }
+
+        async function toggleRoleDB(id, currentRole) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            try {
+                await supabase.from('users').update({ role: newRole }).eq('id', id);
+                await loadAllData();
+                renderUserList();
+            } catch (e) { console.error('역할 변경 오류:', e); }
+        }
+
+        async function deleteUserDB(id) {
+            if (!confirm('이 회원을 삭제하시겠습니까?')) return;
+            try {
+                await supabase.from('users').delete().eq('id', id);
+                await loadAllData();
+                renderUserList();
+            } catch (e) { console.error('삭제 오류:', e); }
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => { 
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.style.display = 'none'; }); 
+        });
+    </script>
+</body>
+</html>
