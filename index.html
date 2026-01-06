@@ -555,7 +555,7 @@
             setSyncStatus('syncing');
             try {
                 const { data, error } = await supabase
-                    .from('users')
+                    .from('site_users')
                     .select('*')
                     .eq('user_id', id)
                     .eq('password', pw)
@@ -588,7 +588,7 @@
             
             setSyncStatus('syncing');
             try {
-                const { data, error } = await db.from('users').insert([
+                const { data, error } = await db.from('site_users').insert([
                     { user_id: id, password: pw, name: name, role: 'user', department: dept || '미지정' }
                 ]);
                 
@@ -655,7 +655,7 @@
                 
                 // 사용자 데이터 로드 (관리자용)
                 if (currentUser.role === 'admin') {
-                    const { data: usersData } = await db.from('users').select('*');
+                    const { data: usersData } = await db.from('site_users').select('*');
                     if (usersData) users = usersData;
                 }
             } catch (e) { console.error('데이터 로드 오류:', e); }
@@ -1052,7 +1052,7 @@
         async function toggleRoleDB(id, currentRole) {
             const newRole = currentRole === 'admin' ? 'user' : 'admin';
             try {
-                await db.from('users').update({ role: newRole }).eq('id', id);
+                await db.from('site_users').update({ role: newRole }).eq('id', id);
                 await loadAllData();
                 renderUserList();
             } catch (e) { console.error('역할 변경 오류:', e); }
@@ -1061,7 +1061,7 @@
         async function deleteUserDB(id) {
             if (!confirm('이 회원을 삭제하시겠습니까?')) return;
             try {
-                await db.from('users').delete().eq('id', id);
+                await db.from('site_users').delete().eq('id', id);
                 await loadAllData();
                 renderUserList();
             } catch (e) { console.error('삭제 오류:', e); }
