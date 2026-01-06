@@ -554,7 +554,7 @@
             
             setSyncStatus('syncing');
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('site_users')
                     .select('*')
                     .eq('user_id', id)
@@ -700,7 +700,7 @@
             
             setSyncStatus('syncing');
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('briefings')
                     .select('*')
                     .eq('date', dateStr)
@@ -763,7 +763,7 @@
             setSyncStatus('syncing');
             try {
                 // Upsert (있으면 업데이트, 없으면 생성)
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('briefings')
                     .upsert({ 
                         date: dateStr, 
