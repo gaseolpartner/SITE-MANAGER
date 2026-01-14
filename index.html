@@ -6,6 +6,7 @@
     <title>현장관리 시스템</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root{--primary:#0f172a;--accent:#3b82f6;--accent-hover:#2563eb;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--text:#334155;--text-light:#64748b;--shadow:0 1px 3px rgba(0,0,0,.1);--shadow-md:0 4px 6px -1px rgba(0,0,0,.1);--radius:12px;--radius-sm:8px}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -165,16 +166,45 @@
             <div class="tabs-wrapper">
                 <div class="tabs-nav">
                     <button class="tab-btn active" onclick="switchTab('briefing',this)">📋 일일 브리핑</button>
+                    <button class="tab-btn" onclick="switchTab('sales',this)">📈 영업 계획</button>
                     <button class="tab-btn" onclick="switchTab('all',this)">🏗️ 전체 현장</button>
                     <button class="tab-btn" onclick="switchTab('concrete',this)">🏢 철근콘크리트 <span id="concreteCount" style="opacity:.7">(0)</span></button>
                     <button class="tab-btn" onclick="switchTab('stone',this)">🪨 석공사 <span id="stoneCount" style="opacity:.7">(0)</span></button>
                 </div>
-                <div class="tab-panel active" id="panel-briefing">
+                <div class="tab-panel" id="panel-briefing">
                     <div class="briefing-header">
                         <div class="briefing-date"><h2>📅 <span id="briefingDateDisplay">오늘</span></h2><select id="briefingDateSelect" onchange="loadBriefing(this.value)"></select></div>
                         <div><button class="btn btn-primary btn-sm" onclick="openPasteModal()">📋 붙여넣기로 추가</button></div>
                     </div>
                     <div id="briefingContent"></div>
+                </div>
+                <div class="tab-panel" id="panel-sales">
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); margin-bottom: 16px;">
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('all')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesTotalCount" style="font-size:22px">0</h3><p>전체</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('1')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth1" style="font-size:22px">0</h3><p>1월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('2')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth2" style="font-size:22px">0</h3><p>2월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('3')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth3" style="font-size:22px">0</h3><p>3월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('4')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth4" style="font-size:22px">0</h3><p>4월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('5')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth5" style="font-size:22px">0</h3><p>5월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('6')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth6" style="font-size:22px">0</h3><p>6월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('7')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth7" style="font-size:22px">0</h3><p>7월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('8')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth8" style="font-size:22px">0</h3><p>8월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('9')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth9" style="font-size:22px">0</h3><p>9월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('10')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth10" style="font-size:22px">0</h3><p>10월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('11')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth11" style="font-size:22px">0</h3><p>11월</p></div></div>
+                        <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('12')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth12" style="font-size:22px">0</h3><p>12월</p></div></div>
+                    </div>
+                    <div class="controls-bar">
+                        <div class="search-box"><span>🔍</span><input type="text" id="searchSales" placeholder="현장명, 건설사, 지역 검색..." oninput="renderSalesTable()"></div>
+                        <div class="filter-pills">
+                            <button class="filter-pill active" onclick="setSalesFilter(this,'all')">전체</button>
+                            <button class="filter-pill" onclick="setSalesFilter(this,'mine')">내 담당</button>
+                            <button class="filter-pill" onclick="setSalesFilter(this,'unassigned')">미배정</button>
+                        </div>
+                        <button class="btn btn-success btn-sm" id="addSalesPlanBtn" onclick="openSalesPlanModal()">➕ 추가</button>
+                        <button class="btn btn-primary btn-sm" onclick="openExcelUploadModal()">📁 엑셀 업로드</button>
+                    </div>
+                    <div class="table-container" id="salesTableContainer"><div class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div></div>
                 </div>
                 <div class="tab-panel" id="panel-all">
                     <div class="controls-bar">
@@ -243,11 +273,47 @@
         <div class="form-group"><label class="form-label">브리핑 날짜</label><input type="date" class="form-input" id="pasteDate"></div>
         <div class="form-group"><label class="form-label">브리핑 내용</label><textarea class="form-textarea" id="pasteContent" rows="15" placeholder="여기에 브리핑 내용을 붙여넣으세요..."></textarea></div>
     </div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('pasteModal')">취소</button><button class="btn btn-primary" onclick="savePastedBriefing()">저장</button></div></div></div>
+    <div class="modal-overlay" id="salesPlanModal"><div class="modal"><div class="modal-header"><h2 id="salesPlanModalTitle">영업 계획 추가</h2><button class="modal-close" onclick="closeModal('salesPlanModal')">&times;</button></div><div class="modal-body">
+        <input type="hidden" id="salesPlanId">
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">지역</label><input type="text" class="form-input" id="salesRegion" placeholder="예: 서울, 경기"></div>
+            <div class="form-group"><label class="form-label">구분</label><input type="text" class="form-input" id="salesSection" placeholder="예: 재개발, 신축"></div>
+        </div>
+        <div class="form-group"><label class="form-label">현장명 *</label><input type="text" class="form-input" id="salesSiteName" placeholder="현장명"></div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">골조사</label><input type="text" class="form-input" id="salesConcrete" placeholder="골조 업체명"></div>
+            <div class="form-group"><label class="form-label">건설사</label><input type="text" class="form-input" id="salesConstruction" placeholder="건설사명"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label class="form-label">규모</label><input type="text" class="form-input" id="salesScale" placeholder="예: B2/25F"></div>
+            <div class="form-group"><label class="form-label">착공일</label><input type="text" class="form-input" id="salesStartDate" placeholder="예: 25년 12월"></div>
+        </div>
+        <div class="form-group"><label class="form-label">비고</label><textarea class="form-textarea" id="salesMemo" rows="2" placeholder="비고"></textarea></div>
+    </div><div class="modal-footer"><button class="btn btn-danger" id="salesDeleteBtn" style="margin-right:auto;display:none" onclick="deleteSalesPlan()">삭제</button><button class="btn btn-secondary" onclick="closeModal('salesPlanModal')">취소</button><button class="btn btn-primary" onclick="saveSalesPlan()">저장</button></div></div></div>
+    <div class="modal-overlay" id="excelUploadModal"><div class="modal" style="max-width:900px"><div class="modal-header"><h2>📁 엑셀 파일 업로드</h2><button class="modal-close" onclick="closeModal('excelUploadModal')">&times;</button></div><div class="modal-body">
+        <div class="form-group">
+            <label class="form-label">엑셀 파일 선택</label>
+            <input type="file" class="form-input" id="excelFileInput" accept=".xlsx,.xls" onchange="handleExcelFile(this)">
+        </div>
+        <div class="form-group" id="sheetSelectGroup" style="display:none">
+            <label class="form-label">시트 선택</label>
+            <select class="form-select" id="sheetSelect" onchange="parseSelectedSheet()"></select>
+        </div>
+        <div id="excelPreview" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <label class="form-label" style="margin:0">미리보기 (<span id="previewCount">0</span>개 현장)</label>
+                <span style="font-size:12px;color:var(--text-light)">* 첫 행(헤더)은 제외됩니다</span>
+            </div>
+            <div class="table-container" style="max-height:350px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <table id="excelPreviewTable"><thead></thead><tbody></tbody></table>
+            </div>
+        </div>
+    </div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('excelUploadModal')">취소</button><button class="btn btn-primary" id="excelImportBtn" onclick="importExcelData()" disabled>추가하기</button></div></div></div>
     <div class="modal-overlay" id="companyEditModal"><div class="modal"><div class="modal-header"><h2 id="companyEditModalTitle">업체 추가</h2><button class="modal-close" onclick="closeModal('companyEditModal')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="companyEditId"><input type="hidden" id="companyEditType">
         <div class="form-row">
             <div class="form-group"><label class="form-label">순위</label><input type="number" class="form-input" id="companyRank" placeholder="순위"></div>
-            <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="companyStatusEdit"><option value="-">-</option><option value="거래중">거래중</option></select></div>
+            <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="companyStatusEdit"><option value="-">-</option><option value="거래중">거래중</option><option value="견적서제출">견적서제출</option></select></div>
         </div>
         <div class="form-group"><label class="form-label">업체명 *</label><input type="text" class="form-input" id="companyNameEdit" placeholder="업체명"></div>
         <div class="form-group"><label class="form-label">대표자</label><input type="text" class="form-input" id="companyCeo" placeholder="대표자"></div>
@@ -264,6 +330,7 @@
         // 전역 변수
         let currentUser = null, users = [], sites = [], briefings = {};
         let concreteCompanies = [], stoneCompanies = [];
+        let salesPlans = [], salesFilter = 'all', salesMonthFilter = 'all';
         let currentFilter = 'all', concreteFilter = 'all', stoneFilter = 'all';
         let editingCompanyType = '', editingCompanyName = '', editingSiteId = null;
 
@@ -358,6 +425,8 @@
             try {
                 const { data: sitesData } = await db.from('sites').select('*').order('created_at', { ascending: false });
                 if (sitesData) sites = sitesData;
+                const { data: salesData } = await db.from('sales_plan').select('*').order('created_at', { ascending: false });
+                if (salesData) salesPlans = salesData;
                 if (currentUser.role === 'admin') {
                     const { data: usersData } = await db.from('site_users').select('*');
                     if (usersData) users = usersData;
@@ -366,7 +435,7 @@
             setSyncStatus('synced');
         }
 
-        function renderAll() { renderAllSites(); renderConcreteTable(); renderStoneTable(); updateCounts(); }
+        function renderAll() { renderAllSites(); renderConcreteTable(); renderStoneTable(); renderSalesTable(); updateCounts(); }
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -488,7 +557,7 @@
             filtered.forEach(c => {
                 const siteCount = sites.filter(s => s.company_type === 'concrete' && s.company_name === c.name).length;
                 const actionCell = isAdmin ? '<td><button class="btn btn-secondary btn-xs" onclick="openEditCompanyModal(\''+c.id+'\')">수정</button></td>' : '';
-                html += '<tr><td>'+(c.rank||'-')+'</td><td class="company-name">'+c.name+'</td><td>'+(c.ceo||'-')+'</td><td>'+(c.location||'-')+'</td><td class="amount">'+(c.amount||'-')+'</td><td><select onchange="updateCompanyStatusDB(\''+c.id+'\',this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-"'+(c.status!=='거래중'?' selected':'')+'>-</option><option value="거래중"'+(c.status==='거래중'?' selected':'')+'>거래중</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal(\'concrete\',\''+c.name+'\')">'+(siteCount>0?siteCount+'개 현장':'현장 추가')+'</button></td>'+actionCell+'</tr>';
+                html += '<tr><td>'+(c.rank||'-')+'</td><td class="company-name">'+c.name+'</td><td>'+(c.ceo||'-')+'</td><td>'+(c.location||'-')+'</td><td class="amount">'+(c.amount||'-')+'</td><td><select onchange="updateCompanyStatusDB(\''+c.id+'\',this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-"'+(c.status==='-'||!c.status?' selected':'')+'>-</option><option value="거래중"'+(c.status==='거래중'?' selected':'')+'>거래중</option><option value="견적서제출"'+(c.status==='견적서제출'?' selected':'')+'>견적서제출</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal(\'concrete\',\''+c.name+'\')">'+(siteCount>0?siteCount+'개 현장':'현장 추가')+'</button></td>'+actionCell+'</tr>';
             });
             html += '</tbody></table>';
             container.innerHTML = html;
@@ -509,7 +578,7 @@
             filtered.forEach(c => {
                 const siteCount = sites.filter(s => s.company_type === 'stone' && s.company_name === c.name).length;
                 const actionCell = isAdmin ? '<td><button class="btn btn-secondary btn-xs" onclick="openEditCompanyModal(\''+c.id+'\')">수정</button></td>' : '';
-                html += '<tr><td>'+(c.rank||'-')+'</td><td class="company-name">'+c.name+'</td><td>'+(c.ceo||'-')+'</td><td>'+(c.location||'-')+'</td><td class="amount">'+(c.amount||'-')+'</td><td><select onchange="updateCompanyStatusDB(\''+c.id+'\',this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-"'+(c.status!=='거래중'?' selected':'')+'>-</option><option value="거래중"'+(c.status==='거래중'?' selected':'')+'>거래중</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal(\'stone\',\''+c.name+'\')">'+(siteCount>0?siteCount+'개 현장':'현장 추가')+'</button></td>'+actionCell+'</tr>';
+                html += '<tr><td>'+(c.rank||'-')+'</td><td class="company-name">'+c.name+'</td><td>'+(c.ceo||'-')+'</td><td>'+(c.location||'-')+'</td><td class="amount">'+(c.amount||'-')+'</td><td><select onchange="updateCompanyStatusDB(\''+c.id+'\',this.value)" style="padding:6px;border-radius:4px;border:1px solid var(--border)"><option value="-"'+(c.status==='-'||!c.status?' selected':'')+'>-</option><option value="거래중"'+(c.status==='거래중'?' selected':'')+'>거래중</option><option value="견적서제출"'+(c.status==='견적서제출'?' selected':'')+'>견적서제출</option></select></td><td><button class="btn btn-secondary btn-sm" onclick="openCompanyModal(\'stone\',\''+c.name+'\')">'+(siteCount>0?siteCount+'개 현장':'현장 추가')+'</button></td>'+actionCell+'</tr>';
             });
             html += '</tbody></table>';
             container.innerHTML = html;
@@ -737,6 +806,350 @@
             if (!confirm('이 회원을 삭제하시겠습니까?')) return;
             try { await db.from('site_users').delete().eq('id', id); await loadAllData(); renderUserList(); }
             catch (e) { console.error('삭제 오류:', e); }
+        }
+
+        // 영업 계획 관리
+        function getMonthFromStartDate(startDate) {
+            if (!startDate) return '';
+            const match = startDate.match(/(\d{1,2})월/);
+            if (match) return match[1];
+            if (startDate.includes('상반기')) return '6';
+            if (startDate.includes('하반기')) return '12';
+            return '';
+        }
+
+        function updateSalesCounts() {
+            const counts = { total: 0, '1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0,'9':0,'10':0,'11':0,'12':0 };
+            salesPlans.forEach(s => {
+                counts.total++;
+                const month = getMonthFromStartDate(s.start_date);
+                if (month && counts[month] !== undefined) counts[month]++;
+            });
+            document.getElementById('salesTotalCount').textContent = counts.total;
+            for (let i = 1; i <= 12; i++) {
+                const el = document.getElementById('salesMonth' + i);
+                if (el) el.textContent = counts[i];
+            }
+        }
+
+        function setSalesMonthFilter(month) {
+            salesMonthFilter = month;
+            renderSalesTable();
+            // 선택된 월 카드 하이라이트
+            document.querySelectorAll('#panel-sales .stat-card').forEach(card => {
+                card.style.borderColor = 'var(--border)';
+            });
+        }
+
+        function renderSalesTable() {
+            updateSalesCounts();
+            const container = document.getElementById('salesTableContainer');
+            const search = document.getElementById('searchSales').value.toLowerCase();
+            let filtered = salesPlans.filter(s => {
+                const matchSearch = (s.site_name && s.site_name.toLowerCase().includes(search)) || 
+                                   (s.region && s.region.toLowerCase().includes(search)) ||
+                                   (s.construction_company && s.construction_company.toLowerCase().includes(search)) ||
+                                   (s.concrete_company && s.concrete_company.toLowerCase().includes(search));
+                let matchFilter = true;
+                if (salesFilter === 'mine') matchFilter = s.assigned_user === currentUser.name;
+                if (salesFilter === 'unassigned') matchFilter = !s.assigned_user;
+                // 월별 필터
+                let matchMonth = true;
+                if (salesMonthFilter !== 'all') {
+                    const month = getMonthFromStartDate(s.start_date);
+                    matchMonth = month === salesMonthFilter;
+                }
+                return matchSearch && matchFilter && matchMonth;
+            });
+            if (filtered.length === 0) { 
+                container.innerHTML = '<div class="empty-state"><div class="icon">📈</div><h3>영업 계획 없음</h3><p>해당 조건의 영업 계획이 없습니다.</p></div>'; 
+                return; 
+            }
+            let html = '<table><thead><tr><th>지역</th><th>현장명</th><th>구분</th><th>골조사</th><th>건설사</th><th>규모</th><th>착공일</th><th>비고</th><th>영업 담당</th><th>관리</th></tr></thead><tbody>';
+            filtered.forEach(s => {
+                const isAssigned = s.assigned_user;
+                const assignBtn = isAssigned 
+                    ? '<span class="badge badge-trading">'+s.assigned_user+'</span>' + (s.assigned_user === currentUser.name || currentUser.role === 'admin' ? ' <button class="btn btn-danger btn-xs" onclick="unassignSalesPlan(\''+s.id+'\')">취소</button>' : '')
+                    : '<button class="btn btn-success btn-xs" onclick="assignSalesPlan(\''+s.id+'\')">내가 갈게요</button>';
+                html += '<tr><td>'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+'</td><td>'+(s.section||'-')+'</td><td>'+(s.concrete_company||'-')+'</td><td>'+(s.construction_company||'-')+'</td><td>'+(s.scale||'-')+'</td><td>'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td>'+assignBtn+'</td><td><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function setSalesFilter(btn, filter) {
+            document.querySelectorAll('#panel-sales .filter-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            salesFilter = filter;
+            renderSalesTable();
+        }
+
+        async function assignSalesPlan(id) {
+            setSyncStatus('syncing');
+            try {
+                await db.from('sales_plan').update({ 
+                    assigned_user: currentUser.name, 
+                    assigned_at: new Date().toISOString() 
+                }).eq('id', id);
+                const plan = salesPlans.find(s => s.id === id);
+                if (plan) { plan.assigned_user = currentUser.name; plan.assigned_at = new Date().toISOString(); }
+                renderSalesTable();
+            } catch (e) { alert('담당 지정 오류'); }
+            setSyncStatus('synced');
+        }
+
+        async function unassignSalesPlan(id) {
+            if (!confirm('담당 지정을 취소하시겠습니까?')) return;
+            setSyncStatus('syncing');
+            try {
+                await db.from('sales_plan').update({ assigned_user: null, assigned_at: null }).eq('id', id);
+                const plan = salesPlans.find(s => s.id === id);
+                if (plan) { plan.assigned_user = null; plan.assigned_at = null; }
+                renderSalesTable();
+            } catch (e) { alert('취소 오류'); }
+            setSyncStatus('synced');
+        }
+
+        function openSalesPlanModal() {
+            document.getElementById('salesPlanModalTitle').textContent = '영업 계획 추가';
+            document.getElementById('salesPlanId').value = '';
+            ['salesRegion','salesSection','salesSiteName','salesContact','salesConcrete','salesConstruction','salesScale','salesStartDate','salesMemo'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('salesDeleteBtn').style.display = 'none';
+            openModal('salesPlanModal');
+        }
+
+        function openEditSalesPlan(id) {
+            const plan = salesPlans.find(s => s.id === id);
+            if (!plan) return;
+            document.getElementById('salesPlanModalTitle').textContent = '영업 계획 수정';
+            document.getElementById('salesPlanId').value = plan.id;
+            document.getElementById('salesRegion').value = plan.region || '';
+            document.getElementById('salesSection').value = plan.section || '';
+            document.getElementById('salesSiteName').value = plan.site_name || '';
+            document.getElementById('salesContact').value = plan.contact || '';
+            document.getElementById('salesConcrete').value = plan.concrete_company || '';
+            document.getElementById('salesConstruction').value = plan.construction_company || '';
+            document.getElementById('salesScale').value = plan.scale || '';
+            document.getElementById('salesStartDate').value = plan.start_date || '';
+            document.getElementById('salesMemo').value = plan.memo || '';
+            document.getElementById('salesDeleteBtn').style.display = 'block';
+            openModal('salesPlanModal');
+        }
+
+        async function saveSalesPlan() {
+            const siteName = document.getElementById('salesSiteName').value.trim();
+            if (!siteName) { alert('현장명을 입력해주세요.'); return; }
+            const id = document.getElementById('salesPlanId').value;
+            const data = {
+                region: document.getElementById('salesRegion').value.trim(),
+                site_name: siteName,
+                section: document.getElementById('salesSection').value.trim(),
+                contact: document.getElementById('salesContact').value.trim(),
+                concrete_company: document.getElementById('salesConcrete').value.trim(),
+                construction_company: document.getElementById('salesConstruction').value.trim(),
+                scale: document.getElementById('salesScale').value.trim(),
+                start_date: document.getElementById('salesStartDate').value.trim(),
+                memo: document.getElementById('salesMemo').value.trim(),
+                updated_at: new Date().toISOString()
+            };
+            setSyncStatus('syncing');
+            try {
+                if (id) { await db.from('sales_plan').update(data).eq('id', id); }
+                else { await db.from('sales_plan').insert([data]); }
+                closeModal('salesPlanModal');
+                await loadAllData();
+                renderSalesTable();
+                alert(id ? '수정되었습니다.' : '추가되었습니다.');
+            } catch (e) { alert('저장 오류'); }
+            setSyncStatus('synced');
+        }
+
+        async function deleteSalesPlan() {
+            const id = document.getElementById('salesPlanId').value;
+            if (!confirm('이 영업 계획을 삭제하시겠습니까?')) return;
+            setSyncStatus('syncing');
+            try {
+                await db.from('sales_plan').delete().eq('id', id);
+                closeModal('salesPlanModal');
+                await loadAllData();
+                renderSalesTable();
+                alert('삭제되었습니다.');
+            } catch (e) { alert('삭제 오류'); }
+            setSyncStatus('synced');
+        }
+
+        // 엑셀 업로드 관련
+        let excelWorkbook = null;
+        let excelParsedData = [];
+
+        function openExcelUploadModal() {
+            document.getElementById('excelFileInput').value = '';
+            document.getElementById('sheetSelectGroup').style.display = 'none';
+            document.getElementById('excelPreview').style.display = 'none';
+            document.getElementById('excelImportBtn').disabled = true;
+            excelWorkbook = null;
+            excelParsedData = [];
+            openModal('excelUploadModal');
+        }
+
+        function handleExcelFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    excelWorkbook = XLSX.read(e.target.result, { type: 'binary' });
+                    const sheetSelect = document.getElementById('sheetSelect');
+                    sheetSelect.innerHTML = excelWorkbook.SheetNames.map(name => 
+                        '<option value="' + name + '">' + name + '</option>'
+                    ).join('');
+                    document.getElementById('sheetSelectGroup').style.display = 'block';
+                    parseSelectedSheet();
+                } catch (err) {
+                    alert('엑셀 파일을 읽을 수 없습니다: ' + err.message);
+                }
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        function parseSelectedSheet() {
+            if (!excelWorkbook) return;
+            const sheetName = document.getElementById('sheetSelect').value;
+            const sheet = excelWorkbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+            
+            // 헤더 찾기 (지역, 현장명 등이 있는 행)
+            let headerRow = -1;
+            let colMap = {};
+            for (let i = 0; i < Math.min(jsonData.length, 15); i++) {
+                const row = jsonData[i];
+                for (let j = 0; j < row.length; j++) {
+                    const cell = String(row[j]).trim().toLowerCase();
+                    if (cell.includes('지역')) colMap.region = j;
+                    if (cell.includes('현장') && !cell.includes('현장수')) colMap.site_name = j;
+                    if (cell.includes('사업') || cell.includes('구분')) colMap.section = j;
+                    if (cell.includes('철콘') || cell.includes('골조')) colMap.concrete = j;
+                    if (cell.includes('건설사')) colMap.construction = j;
+                    if (cell === '층' || cell.includes('규모')) colMap.scale_start = j;
+                    if (cell.includes('착공')) colMap.start_date = j;
+                    if (cell.includes('비고') || cell.includes('메모')) colMap.memo = j;
+                }
+                if (colMap.site_name !== undefined) {
+                    headerRow = i;
+                    break;
+                }
+            }
+            
+            if (headerRow === -1) {
+                alert('현장명 컬럼을 찾을 수 없습니다. 엑셀 형식을 확인해주세요.');
+                return;
+            }
+
+            // 규모 컬럼 찾기 (층 컬럼이 2개일 수 있음: 지하/지상)
+            const headerRowData = jsonData[headerRow];
+            let scaleColB = -1, scaleColF = -1;
+            for (let j = 0; j < headerRowData.length; j++) {
+                const cell = String(headerRowData[j]).trim();
+                if (cell === '층') {
+                    if (scaleColB === -1) scaleColB = j;
+                    else scaleColF = j;
+                }
+            }
+            
+            // 착공년/월 컬럼 찾기
+            let startYearCol = -1, startMonthCol = -1;
+            for (let j = 0; j < headerRowData.length; j++) {
+                const cell = String(headerRowData[j]).trim();
+                if (cell === '착공일' || cell === '년') {
+                    if (startYearCol === -1) startYearCol = j;
+                }
+                if (cell === '월') startMonthCol = j;
+            }
+            if (startYearCol === -1 && colMap.start_date !== undefined) startYearCol = colMap.start_date;
+
+            // 데이터 파싱
+            excelParsedData = [];
+            for (let i = headerRow + 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                const siteName = String(row[colMap.site_name] || '').trim();
+                if (!siteName) continue;
+                
+                // 규모 합치기
+                let scale = '';
+                if (scaleColB !== -1 && row[scaleColB]) {
+                    const b = String(row[scaleColB]).replace(/[^0-9]/g, '');
+                    if (b) scale += 'B' + b;
+                }
+                if (scaleColF !== -1 && row[scaleColF]) {
+                    const f = String(row[scaleColF]).replace(/[^0-9]/g, '');
+                    if (f) scale += (scale ? '/' : '') + f + 'F';
+                }
+                
+                // 착공일 합치기
+                let startDate = '';
+                if (startYearCol !== -1 && row[startYearCol]) {
+                    let y = String(row[startYearCol]).replace('년', '').trim();
+                    startDate = y + '년';
+                }
+                if (startMonthCol !== -1 && row[startMonthCol]) {
+                    let m = String(row[startMonthCol]).replace('월', '').trim();
+                    startDate += ' ' + m + '월';
+                }
+                
+                excelParsedData.push({
+                    region: String(row[colMap.region] || '').trim(),
+                    site_name: siteName,
+                    section: String(row[colMap.section] || '').trim(),
+                    concrete_company: String(row[colMap.concrete] || '').trim(),
+                    construction_company: String(row[colMap.construction] || '').trim(),
+                    scale: scale.trim(),
+                    start_date: startDate.trim(),
+                    memo: String(row[colMap.memo] || '').trim()
+                });
+            }
+            
+            // 미리보기 표시
+            renderExcelPreview();
+        }
+
+        function renderExcelPreview() {
+            if (excelParsedData.length === 0) {
+                document.getElementById('excelPreview').style.display = 'none';
+                document.getElementById('excelImportBtn').disabled = true;
+                return;
+            }
+            
+            document.getElementById('previewCount').textContent = excelParsedData.length;
+            const thead = document.querySelector('#excelPreviewTable thead');
+            const tbody = document.querySelector('#excelPreviewTable tbody');
+            
+            thead.innerHTML = '<tr><th>지역</th><th>현장명</th><th>구분</th><th>골조사</th><th>건설사</th><th>규모</th><th>착공일</th><th>비고</th></tr>';
+            tbody.innerHTML = excelParsedData.slice(0, 50).map(d => 
+                '<tr><td>'+(d.region||'-')+'</td><td>'+(d.site_name||'-')+'</td><td>'+(d.section||'-')+'</td><td>'+(d.concrete_company||'-')+'</td><td>'+(d.construction_company||'-')+'</td><td>'+(d.scale||'-')+'</td><td>'+(d.start_date||'-')+'</td><td>'+(d.memo||'-')+'</td></tr>'
+            ).join('');
+            
+            document.getElementById('excelPreview').style.display = 'block';
+            document.getElementById('excelImportBtn').disabled = false;
+        }
+
+        async function importExcelData() {
+            if (excelParsedData.length === 0) {
+                alert('추가할 데이터가 없습니다.');
+                return;
+            }
+            if (!confirm(excelParsedData.length + '개 현장을 추가하시겠습니까?')) return;
+            
+            setSyncStatus('syncing');
+            try {
+                await db.from('sales_plan').insert(excelParsedData);
+                closeModal('excelUploadModal');
+                await loadAllData();
+                renderSalesTable();
+                alert(excelParsedData.length + '개 현장이 추가되었습니다!');
+            } catch (e) {
+                alert('추가 오류: ' + e.message);
+            }
+            setSyncStatus('synced');
         }
 
         // 모달 외부 클릭시 닫기
