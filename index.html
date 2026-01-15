@@ -944,7 +944,7 @@
         function openSalesPlanModal() {
             document.getElementById('salesPlanModalTitle').textContent = '영업 계획 추가';
             document.getElementById('salesPlanId').value = '';
-            ['salesRegion','salesSection','salesSiteName','salesContact','salesConcrete','salesConstruction','salesScale','salesStartDate','salesMemo'].forEach(id => document.getElementById(id).value = '');
+            ['salesRegion','salesSection','salesSiteName','salesConcrete','salesConstruction','salesScale','salesStartDate','salesMemo'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('salesDeleteBtn').style.display = 'none';
             openModal('salesPlanModal');
         }
