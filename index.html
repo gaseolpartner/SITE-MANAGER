@@ -179,6 +179,16 @@
                     <div id="briefingContent"></div>
                 </div>
                 <div class="tab-panel" id="panel-sales">
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+                        <h3 style="margin:0;font-size:18px">📈 영업 계획</h3>
+                        <select class="form-select" id="salesYearFilter" onchange="renderSalesTable()" style="width:auto;padding:8px 16px;font-weight:600">
+                            <option value="all">전체 년도</option>
+                            <option value="24">2024년</option>
+                            <option value="25">2025년</option>
+                            <option value="26" selected>2026년</option>
+                            <option value="27">2027년</option>
+                        </select>
+                    </div>
                     <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); margin-bottom: 16px;">
                         <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('all')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesTotalCount" style="font-size:22px">0</h3><p>전체</p></div></div>
                         <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('1')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesMonth1" style="font-size:22px">0</h3><p>1월</p></div></div>
@@ -809,18 +819,32 @@
         }
 
         // 영업 계획 관리
+        function getYearFromStartDate(startDate) {
+            if (!startDate) return '';
+            const match = startDate.match(/(\d{2})년/);
+            if (match) return match[1];
+            return '';
+        }
+
         function getMonthFromStartDate(startDate) {
             if (!startDate) return '';
             const match = startDate.match(/(\d{1,2})월/);
             if (match) return match[1];
             if (startDate.includes('상반기')) return '6';
             if (startDate.includes('하반기')) return '12';
+            if (startDate.includes('중반')) return '6';
             return '';
         }
 
         function updateSalesCounts() {
+            const yearFilter = document.getElementById('salesYearFilter').value;
             const counts = { total: 0, '1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0,'9':0,'10':0,'11':0,'12':0 };
             salesPlans.forEach(s => {
+                // 년도 필터 적용
+                if (yearFilter !== 'all') {
+                    const year = getYearFromStartDate(s.start_date);
+                    if (year !== yearFilter) return;
+                }
                 counts.total++;
                 const month = getMonthFromStartDate(s.start_date);
                 if (month && counts[month] !== undefined) counts[month]++;
@@ -845,6 +869,7 @@
             updateSalesCounts();
             const container = document.getElementById('salesTableContainer');
             const search = document.getElementById('searchSales').value.toLowerCase();
+            const yearFilter = document.getElementById('salesYearFilter').value;
             let filtered = salesPlans.filter(s => {
                 const matchSearch = (s.site_name && s.site_name.toLowerCase().includes(search)) || 
                                    (s.region && s.region.toLowerCase().includes(search)) ||
@@ -853,13 +878,19 @@
                 let matchFilter = true;
                 if (salesFilter === 'mine') matchFilter = s.assigned_user === currentUser.name;
                 if (salesFilter === 'unassigned') matchFilter = !s.assigned_user;
+                // 년도 필터
+                let matchYear = true;
+                if (yearFilter !== 'all') {
+                    const year = getYearFromStartDate(s.start_date);
+                    matchYear = year === yearFilter;
+                }
                 // 월별 필터
                 let matchMonth = true;
                 if (salesMonthFilter !== 'all') {
                     const month = getMonthFromStartDate(s.start_date);
                     matchMonth = month === salesMonthFilter;
                 }
-                return matchSearch && matchFilter && matchMonth;
+                return matchSearch && matchFilter && matchYear && matchMonth;
             });
             if (filtered.length === 0) { 
                 container.innerHTML = '<div class="empty-state"><div class="icon">📈</div><h3>영업 계획 없음</h3><p>해당 조건의 영업 계획이 없습니다.</p></div>'; 
