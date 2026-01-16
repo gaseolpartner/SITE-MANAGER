@@ -188,6 +188,11 @@
                             <option value="26" selected>2026년</option>
                             <option value="27">2027년</option>
                         </select>
+                        <select class="form-select" id="salesCategoryFilter" onchange="renderSalesTable()" style="width:auto;padding:8px 16px;font-weight:600">
+                            <option value="all">전체</option>
+                            <option value="건축">🏗️ 건축</option>
+                            <option value="석재">🪨 석재</option>
+                        </select>
                     </div>
                     <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); margin-bottom: 16px;">
                         <div class="stat-card" style="padding:16px;cursor:pointer" onclick="setSalesMonthFilter('all')"><div class="stat-info" style="text-align:center;width:100%"><h3 id="salesTotalCount" style="font-size:22px">0</h3><p>전체</p></div></div>
@@ -286,17 +291,21 @@
     <div class="modal-overlay" id="salesPlanModal"><div class="modal"><div class="modal-header"><h2 id="salesPlanModalTitle">영업 계획 추가</h2><button class="modal-close" onclick="closeModal('salesPlanModal')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="salesPlanId">
         <div class="form-row">
+            <div class="form-group"><label class="form-label">대분류 *</label><select class="form-select" id="salesCategory"><option value="건축">🏗️ 건축</option><option value="석재">🪨 석재</option></select></div>
             <div class="form-group"><label class="form-label">지역</label><input type="text" class="form-input" id="salesRegion" placeholder="예: 서울, 경기"></div>
-            <div class="form-group"><label class="form-label">구분</label><input type="text" class="form-input" id="salesSection" placeholder="예: 재개발, 신축"></div>
         </div>
         <div class="form-group"><label class="form-label">현장명 *</label><input type="text" class="form-input" id="salesSiteName" placeholder="현장명"></div>
         <div class="form-row">
+            <div class="form-group"><label class="form-label">구분</label><input type="text" class="form-input" id="salesSection" placeholder="예: 재개발, 신축"></div>
             <div class="form-group"><label class="form-label">골조사</label><input type="text" class="form-input" id="salesConcrete" placeholder="골조 업체명"></div>
-            <div class="form-group"><label class="form-label">건설사</label><input type="text" class="form-input" id="salesConstruction" placeholder="건설사명"></div>
         </div>
         <div class="form-row">
+            <div class="form-group"><label class="form-label">건설사</label><input type="text" class="form-input" id="salesConstruction" placeholder="건설사명"></div>
             <div class="form-group"><label class="form-label">규모</label><input type="text" class="form-input" id="salesScale" placeholder="예: B2/25F"></div>
+        </div>
+        <div class="form-row">
             <div class="form-group"><label class="form-label">착공일</label><input type="text" class="form-input" id="salesStartDate" placeholder="예: 25년 12월"></div>
+            <div class="form-group"></div>
         </div>
         <div class="form-group"><label class="form-label">비고</label><textarea class="form-textarea" id="salesMemo" rows="2" placeholder="비고"></textarea></div>
     </div><div class="modal-footer"><button class="btn btn-danger" id="salesDeleteBtn" style="margin-right:auto;display:none" onclick="deleteSalesPlan()">삭제</button><button class="btn btn-secondary" onclick="closeModal('salesPlanModal')">취소</button><button class="btn btn-primary" onclick="saveSalesPlan()">저장</button></div></div></div>
@@ -838,12 +847,17 @@
 
         function updateSalesCounts() {
             const yearFilter = document.getElementById('salesYearFilter').value;
+            const categoryFilter = document.getElementById('salesCategoryFilter').value;
             const counts = { total: 0, '1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0,'9':0,'10':0,'11':0,'12':0 };
             salesPlans.forEach(s => {
                 // 년도 필터 적용
                 if (yearFilter !== 'all') {
                     const year = getYearFromStartDate(s.start_date);
                     if (year !== yearFilter) return;
+                }
+                // 대분류 필터 적용
+                if (categoryFilter !== 'all') {
+                    if ((s.category || '건축') !== categoryFilter) return;
                 }
                 counts.total++;
                 const month = getMonthFromStartDate(s.start_date);
@@ -870,6 +884,7 @@
             const container = document.getElementById('salesTableContainer');
             const search = document.getElementById('searchSales').value.toLowerCase();
             const yearFilter = document.getElementById('salesYearFilter').value;
+            const categoryFilter = document.getElementById('salesCategoryFilter').value;
             let filtered = salesPlans.filter(s => {
                 const matchSearch = (s.site_name && s.site_name.toLowerCase().includes(search)) || 
                                    (s.region && s.region.toLowerCase().includes(search)) ||
@@ -884,25 +899,31 @@
                     const year = getYearFromStartDate(s.start_date);
                     matchYear = year === yearFilter;
                 }
+                // 대분류 필터
+                let matchCategory = true;
+                if (categoryFilter !== 'all') {
+                    matchCategory = (s.category || '건축') === categoryFilter;
+                }
                 // 월별 필터
                 let matchMonth = true;
                 if (salesMonthFilter !== 'all') {
                     const month = getMonthFromStartDate(s.start_date);
                     matchMonth = month === salesMonthFilter;
                 }
-                return matchSearch && matchFilter && matchYear && matchMonth;
+                return matchSearch && matchFilter && matchYear && matchCategory && matchMonth;
             });
             if (filtered.length === 0) { 
                 container.innerHTML = '<div class="empty-state"><div class="icon">📈</div><h3>영업 계획 없음</h3><p>해당 조건의 영업 계획이 없습니다.</p></div>'; 
                 return; 
             }
-            let html = '<table><thead><tr><th>지역</th><th>현장명</th><th>구분</th><th>골조사</th><th>건설사</th><th>규모</th><th>착공일</th><th>비고</th><th>영업 담당</th><th>관리</th></tr></thead><tbody>';
+            let html = '<table><thead><tr><th>대분류</th><th>지역</th><th>현장명</th><th>구분</th><th>골조사</th><th>건설사</th><th>규모</th><th>착공일</th><th>비고</th><th>영업 담당</th><th>관리</th></tr></thead><tbody>';
             filtered.forEach(s => {
                 const isAssigned = s.assigned_user;
                 const assignBtn = isAssigned 
                     ? '<span class="badge badge-trading">'+s.assigned_user+'</span>' + (s.assigned_user === currentUser.name || currentUser.role === 'admin' ? ' <button class="btn btn-danger btn-xs" onclick="unassignSalesPlan(\''+s.id+'\')">취소</button>' : '')
                     : '<button class="btn btn-success btn-xs" onclick="assignSalesPlan(\''+s.id+'\')">내가 갈게요</button>';
-                html += '<tr><td>'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+'</td><td>'+(s.section||'-')+'</td><td>'+(s.concrete_company||'-')+'</td><td>'+(s.construction_company||'-')+'</td><td>'+(s.scale||'-')+'</td><td>'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td>'+assignBtn+'</td><td><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
+                const categoryBadge = (s.category || '건축') === '석재' ? '<span class="badge badge-completed">🪨 석재</span>' : '<span class="badge badge-active">🏗️ 건축</span>';
+                html += '<tr><td>'+categoryBadge+'</td><td>'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+'</td><td>'+(s.section||'-')+'</td><td>'+(s.concrete_company||'-')+'</td><td>'+(s.construction_company||'-')+'</td><td>'+(s.scale||'-')+'</td><td>'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td>'+assignBtn+'</td><td><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
             });
             html += '</tbody></table>';
             container.innerHTML = html;
@@ -944,6 +965,7 @@
         function openSalesPlanModal() {
             document.getElementById('salesPlanModalTitle').textContent = '영업 계획 추가';
             document.getElementById('salesPlanId').value = '';
+            document.getElementById('salesCategory').value = '건축';
             ['salesRegion','salesSection','salesSiteName','salesConcrete','salesConstruction','salesScale','salesStartDate','salesMemo'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('salesDeleteBtn').style.display = 'none';
             openModal('salesPlanModal');
@@ -954,6 +976,7 @@
             if (!plan) return;
             document.getElementById('salesPlanModalTitle').textContent = '영업 계획 수정';
             document.getElementById('salesPlanId').value = plan.id;
+            document.getElementById('salesCategory').value = plan.category || '건축';
             document.getElementById('salesRegion').value = plan.region || '';
             document.getElementById('salesSection').value = plan.section || '';
             document.getElementById('salesSiteName').value = plan.site_name || '';
@@ -971,6 +994,7 @@
             if (!siteName) { alert('현장명을 입력해주세요.'); return; }
             const id = document.getElementById('salesPlanId').value;
             const data = {
+                category: document.getElementById('salesCategory').value,
                 region: document.getElementById('salesRegion').value.trim(),
                 site_name: siteName,
                 section: document.getElementById('salesSection').value.trim(),
