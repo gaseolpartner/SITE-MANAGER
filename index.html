@@ -233,7 +233,7 @@
                         <button class="btn btn-primary btn-sm" onclick="openQuickAddModal()">➕ 현장 추가</button>
                     </div>
                     <div class="table-container">
-                        <table><thead><tr><th>No</th><th>현장명</th><th>업체명</th><th>구분</th><th>담당자</th><th>연락처</th><th>계약금액</th><th style="width:140px">진행률</th><th>상태</th><th>관리</th></tr></thead><tbody id="allSitesTable"></tbody></table>
+                        <table><thead><tr><th>No</th><th>현장명</th><th>업체명</th><th>구분</th><th>담당자</th><th>연락처</th><th>계약금액</th><th style="width:140px">진행률</th><th>상태</th><th id="hiddenHeader" style="display:none">숨김</th><th>관리</th></tr></thead><tbody id="allSitesTable"></tbody></table>
                     </div>
                 </div>
                 <div class="tab-panel" id="panel-concrete">
@@ -531,23 +531,42 @@
         function renderAllSites() {
             const tbody = document.getElementById('allSitesTable');
             const searchTerm = document.getElementById('searchAll').value.toLowerCase();
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            // 관리자만 숨김 헤더 표시
+            const hiddenHeader = document.getElementById('hiddenHeader');
+            if (hiddenHeader) hiddenHeader.style.display = isAdmin ? '' : 'none';
             let filtered = sites.filter(s => {
                 const matchSearch = s.site_name.toLowerCase().includes(searchTerm) || s.company_name.toLowerCase().includes(searchTerm);
                 const matchFilter = currentFilter === 'all' || s.status === currentFilter;
-                return matchSearch && matchFilter;
+                // 일반 사용자는 숨김 처리된 현장 안 보임
+                const matchHidden = isAdmin || !s.hidden_from_users;
+                return matchSearch && matchFilter && matchHidden;
             });
             const order = { active: 0, pending: 1, completed: 2 };
             filtered.sort((a, b) => order[a.status || 'active'] - order[b.status || 'active']);
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon">📋</div><h3>등록된 현장이 없습니다</h3></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="icon">📋</div><h3>등록된 현장이 없습니다</h3></div></td></tr>';
                 return;
             }
             tbody.innerHTML = filtered.map((s, i) => {
                 const statusClass = s.status === 'completed' ? 'badge-completed' : s.status === 'pending' ? 'badge-pending' : 'badge-active';
                 const statusText = s.status === 'completed' ? '완료' : s.status === 'pending' ? '대기중' : '진행중';
                 const typeText = s.company_type === 'concrete' ? '철근콘크리트' : '석공사';
-                return '<tr><td>'+(i+1)+'</td><td class="company-name">'+s.site_name+'</td><td>'+s.company_name+'</td><td>'+typeText+'</td><td>'+(s.manager||'-')+'</td><td>'+(s.phone||'-')+'</td><td class="amount">'+(s.amount||'-')+'</td><td><div class="progress-bar"><div class="progress-fill" style="width:'+(s.progress||0)+'%"></div></div><div class="progress-text">'+(s.progress||0)+'%</div></td><td><span class="badge '+statusClass+'">'+statusText+'</span></td><td><button class="btn btn-secondary btn-sm" onclick="editSiteById(\''+s.id+'\')">수정</button> <button class="btn btn-danger btn-sm" onclick="deleteSiteById(\''+s.id+'\')">삭제</button></td></tr>';
+                const hiddenCheckbox = isAdmin ? '<td style="text-align:center"><input type="checkbox" '+(s.hidden_from_users ? 'checked' : '')+' onchange="toggleSiteHidden(\''+s.id+'\', this.checked)" title="체크하면 일반 사용자에게 숨김"></td>' : '';
+                return '<tr style="'+(s.hidden_from_users ? 'opacity:0.5;' : '')+'"><td>'+(i+1)+'</td><td class="company-name">'+s.site_name+(s.hidden_from_users ? ' 🔒' : '')+'</td><td>'+s.company_name+'</td><td>'+typeText+'</td><td>'+(s.manager||'-')+'</td><td>'+(s.phone||'-')+'</td><td class="amount">'+(s.amount||'-')+'</td><td><div class="progress-bar"><div class="progress-fill" style="width:'+(s.progress||0)+'%"></div></div><div class="progress-text">'+(s.progress||0)+'%</div></td><td><span class="badge '+statusClass+'">'+statusText+'</span></td>'+hiddenCheckbox+'<td><button class="btn btn-secondary btn-sm" onclick="editSiteById(\''+s.id+'\')">수정</button> <button class="btn btn-danger btn-sm" onclick="deleteSiteById(\''+s.id+'\')">삭제</button></td></tr>';
             }).join('');
+        }
+
+        async function toggleSiteHidden(id, hidden) {
+            setSyncStatus('syncing');
+            try {
+                await db.from('sites').update({ hidden_from_users: hidden }).eq('id', id);
+                const site = sites.find(s => s.id === id);
+                if (site) site.hidden_from_users = hidden;
+                renderAllSites();
+                updateCounts();
+            } catch (e) { alert('숨김 설정 오류'); }
+            setSyncStatus('synced');
         }
 
         function searchSites() { renderAllSites(); }
