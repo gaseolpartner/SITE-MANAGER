@@ -916,7 +916,7 @@
                 container.innerHTML = '<div class="empty-state"><div class="icon">📈</div><h3>영업 계획 없음</h3><p>해당 조건의 영업 계획이 없습니다.</p></div>'; 
                 return; 
             }
-            let html = '<table><thead><tr><th style="text-align:center">대분류</th><th style="text-align:center">지역</th><th>현장명</th><th style="text-align:center">구분</th><th style="text-align:center">골조사</th><th style="text-align:center">건설사</th><th style="text-align:center">규모</th><th style="text-align:center">착공일</th><th style="text-align:center">비고</th><th style="text-align:center;min-width:100px">영업 담당</th><th style="text-align:center">관리</th></tr></thead><tbody>';
+            let html = '<table><thead><tr><th style="text-align:center;min-width:80px">대분류</th><th style="text-align:center">지역</th><th>현장명</th><th style="text-align:center">구분</th><th style="text-align:center">골조사</th><th style="text-align:center">건설사</th><th style="text-align:center">규모</th><th style="text-align:center">착공일</th><th style="text-align:center">비고</th><th style="text-align:center;min-width:100px">영업 담당</th><th style="text-align:center">관리</th></tr></thead><tbody>';
             filtered.forEach(s => {
                 const isAssigned = s.assigned_user;
                 const assignBtn = isAssigned 
