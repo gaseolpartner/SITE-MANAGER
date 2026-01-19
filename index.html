@@ -917,13 +917,18 @@
                 return; 
             }
             let html = '<table><thead><tr><th style="text-align:center;min-width:80px">대분류</th><th style="text-align:center">지역</th><th>현장명</th><th style="text-align:center">구분</th><th style="text-align:center">골조사</th><th style="text-align:center">건설사</th><th style="text-align:center">규모</th><th style="text-align:center">착공일</th><th style="text-align:center">비고</th><th style="text-align:center;min-width:100px">영업 담당</th><th style="text-align:center">관리</th></tr></thead><tbody>';
+            const now = new Date();
+            const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
             filtered.forEach(s => {
                 const isAssigned = s.assigned_user;
                 const assignBtn = isAssigned 
                     ? '<span class="badge badge-trading">'+s.assigned_user+'</span>' + (s.assigned_user === currentUser.name || currentUser.role === 'admin' ? '<br><button class="btn btn-danger btn-xs" style="margin-top:4px" onclick="unassignSalesPlan(\''+s.id+'\')">취소</button>' : '')
                     : '<button class="btn btn-success btn-xs" style="white-space:nowrap" onclick="assignSalesPlan(\''+s.id+'\')">내가 갈게요</button>';
-                const categoryBadge = (s.category || '건축') === '석재' ? '<span class="badge badge-completed">🪨 석재</span>' : '<span class="badge badge-active">🏗️ 건축</span>';
-                html += '<tr><td style="text-align:center">'+categoryBadge+'</td><td style="text-align:center">'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+'</td><td style="text-align:center">'+(s.section||'-')+'</td><td style="text-align:center">'+(s.concrete_company||'-')+'</td><td style="text-align:center">'+(s.construction_company||'-')+'</td><td style="text-align:center">'+(s.scale||'-')+'</td><td style="text-align:center;white-space:nowrap">'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td style="text-align:center">'+assignBtn+'</td><td style="text-align:center"><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
+                const categoryBadge = (s.category || '건축') === '석재' ? '<span class="badge badge-completed" style="white-space:nowrap">🪨 석재</span>' : '<span class="badge badge-active" style="white-space:nowrap">🏗️ 건축</span>';
+                const isNew = s.created_at && new Date(s.created_at) > oneDayAgo;
+                const newBadge = isNew ? ' <span style="background:#fef3c7;color:#d97706;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600">NEW</span>' : '';
+                const rowStyle = isNew ? 'background-color:#fffbeb;' : '';
+                html += '<tr style="'+rowStyle+'"><td style="text-align:center">'+categoryBadge+'</td><td style="text-align:center">'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+newBadge+'</td><td style="text-align:center">'+(s.section||'-')+'</td><td style="text-align:center">'+(s.concrete_company||'-')+'</td><td style="text-align:center">'+(s.construction_company||'-')+'</td><td style="text-align:center">'+(s.scale||'-')+'</td><td style="text-align:center;white-space:nowrap">'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td style="text-align:center">'+assignBtn+'</td><td style="text-align:center"><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
             });
             html += '</tbody></table>';
             container.innerHTML = html;
