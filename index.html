@@ -152,7 +152,7 @@
             <div class="header-left"><h1>🏗️ 현장관리 시스템</h1><span class="sync-indicator" id="syncIndicator">● 연결됨</span></div>
             <div class="header-right">
                 <div class="user-badge"><div class="user-avatar" id="userAvatar">관</div><span id="userName">관리자</span></div>
-                <div id="adminBtns" style="display:none"><button class="header-btn" onclick="openUserModal()">👥 회원관리</button></div>
+                <div id="adminBtns" style="display:none"><button class="header-btn" onclick="openUserModal()">👥 회원관리</button><button class="header-btn" onclick="openActivityLogModal()">📋 활동로그</button></div>
                 <button class="header-btn" onclick="logout()">로그아웃</button>
             </div>
         </header>
@@ -263,7 +263,50 @@
     </div>
 
     <!-- 모달들 -->
-    <div class="modal-overlay" id="userModal"><div class="modal"><div class="modal-header"><h2>👥 회원 관리</h2><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div><div class="modal-body"><div class="site-list" id="userList"></div></div></div></div>
+    <div class="modal-overlay" id="userModal"><div class="modal" style="max-width:650px"><div class="modal-header"><h2>👥 회원 관리</h2><button class="modal-close" onclick="closeModal('userModal')">&times;</button></div><div class="modal-body"><div class="site-list" id="userList" style="max-height:500px;overflow-y:auto"></div></div></div></div>
+    
+    <!-- 권한 설정 모달 -->
+    <div class="modal-overlay" id="permissionModal"><div class="modal"><div class="modal-header"><h2>🔐 권한 설정 - <span id="permUserName"></span></h2><button class="modal-close" onclick="closeModal('permissionModal')">&times;</button></div><div class="modal-body">
+        <input type="hidden" id="permUserId">
+        <p style="margin-bottom:20px;color:var(--text-light);font-size:14px">이 사용자에게 숨길 컬럼을 선택하세요. 체크된 항목은 해당 사용자에게 표시되지 않습니다.</p>
+        <div style="background:var(--bg);padding:16px;border-radius:var(--radius-sm);margin-bottom:16px">
+            <h4 style="margin-bottom:12px;font-size:14px;color:var(--primary)">📈 영업 계획 컬럼 숨기기</h4>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="permHideConcrete"> 골조사 숨기기</label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="permHideConstruction"> 건설사 숨기기</label>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="permHideScale"> 규모 숨기기</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="permHideMemo"> 비고 숨기기</label>
+        </div>
+        <div style="background:var(--bg);padding:16px;border-radius:var(--radius-sm)">
+            <h4 style="margin-bottom:12px;font-size:14px;color:var(--primary)">✏️ 편집 권한</h4>
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="permCanEdit" checked> 영업계획 수정 가능</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="permCanDelete"> 영업계획 삭제 가능</label>
+        </div>
+    </div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('permissionModal')">취소</button><button class="btn btn-primary" onclick="savePermissions()">저장</button></div></div></div>
+    
+    <!-- 활동 로그 모달 -->
+    <div class="modal-overlay" id="activityLogModal"><div class="modal" style="max-width:900px"><div class="modal-header"><h2>📋 활동 로그</h2><button class="modal-close" onclick="closeModal('activityLogModal')">&times;</button></div><div class="modal-body">
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+            <select class="form-select" id="logUserFilter" onchange="loadActivityLogs()" style="width:auto;padding:8px 12px">
+                <option value="all">모든 사용자</option>
+            </select>
+            <select class="form-select" id="logActionFilter" onchange="loadActivityLogs()" style="width:auto;padding:8px 12px">
+                <option value="all">모든 활동</option>
+                <option value="create">추가</option>
+                <option value="update">수정</option>
+                <option value="delete">삭제</option>
+                <option value="assign">담당지정</option>
+            </select>
+            <select class="form-select" id="logTableFilter" onchange="loadActivityLogs()" style="width:auto;padding:8px 12px">
+                <option value="all">모든 대상</option>
+                <option value="sales_plan">영업계획</option>
+                <option value="sites">현장</option>
+                <option value="briefings">브리핑</option>
+            </select>
+        </div>
+        <div class="table-container" style="max-height:450px;overflow-y:auto">
+            <table id="activityLogTable"><thead><tr><th>시간</th><th>사용자</th><th>활동</th><th>대상</th><th>내용</th></tr></thead><tbody id="activityLogBody"></tbody></table>
+        </div>
+    </div></div></div>
     <div class="modal-overlay" id="companyModal"><div class="modal"><div class="modal-header"><h2 id="companyModalTitle">업체 현장 관리</h2><button class="modal-close" onclick="closeModal('companyModal')">&times;</button></div><div class="modal-body"><button class="btn btn-success" style="width:100%;margin-bottom:16px" onclick="addSiteToCompany()">➕ 새 현장 추가</button><div class="site-list" id="companySiteList"></div></div></div></div>
     <div class="modal-overlay" id="siteModal"><div class="modal"><div class="modal-header"><h2 id="siteModalTitle">현장 정보</h2><button class="modal-close" onclick="closeModal('siteModal')">&times;</button></div><div class="modal-body">
         <div class="form-group"><label class="form-label">현장명 *</label><input type="text" class="form-input" id="siteName" placeholder="현장명"></div>
@@ -352,6 +395,8 @@
         let salesPlans = [], salesFilter = 'all', salesMonthFilter = 'all';
         let currentFilter = 'all', concreteFilter = 'all', stoneFilter = 'all';
         let editingCompanyType = '', editingCompanyName = '', editingSiteId = null;
+        let userPermissions = {}; // 현재 사용자 권한
+        let activityLogs = []; // 활동 로그
 
         // 초기화
         document.addEventListener('DOMContentLoaded', () => { checkAutoLogin(); initBriefingDates(); });
@@ -435,6 +480,7 @@
             }
             await loadCompaniesFromDB();
             await loadAllData();
+            await loadUserPermissions(); // 사용자 권한 로드
             renderAll();
             await loadBriefingFromDB();
         }
@@ -830,7 +876,166 @@
             container.innerHTML = users.map(u => {
                 const roleClass = u.role === 'admin' ? 'badge-trading' : 'badge-active';
                 const roleText = u.role === 'admin' ? '관리자' : '사용자';
-                return '<div class="site-item"><div class="site-info"><h4>'+u.name+' <span class="badge '+roleClass+'">'+roleText+'</span></h4><p>ID: '+u.user_id+' | 부서: '+(u.department||'미지정')+'</p></div><div class="site-actions">'+(u.user_id !== 'baekop99' ? '<button class="btn btn-secondary btn-sm" onclick="toggleRoleDB(\''+u.id+'\',\''+u.role+'\')">'+(u.role==='admin'?'사용자로':'관리자로')+'</button><button class="btn btn-danger btn-sm" onclick="deleteUserDB(\''+u.id+'\')">삭제</button>':'')+'</div></div>';
+                const permBtn = u.role !== 'admin' ? '<button class="btn btn-secondary btn-sm" onclick="openPermissionModal(\''+u.id+'\',\''+u.name+'\')">권한설정</button>' : '';
+                return '<div class="site-item"><div class="site-info"><h4>'+u.name+' <span class="badge '+roleClass+'">'+roleText+'</span></h4><p>ID: '+u.user_id+' | 부서: '+(u.department||'미지정')+'</p></div><div class="site-actions">'+permBtn+(u.user_id !== 'baekop99' ? '<button class="btn btn-secondary btn-sm" onclick="toggleRoleDB(\''+u.id+'\',\''+u.role+'\')">'+(u.role==='admin'?'사용자로':'관리자로')+'</button><button class="btn btn-danger btn-sm" onclick="deleteUserDB(\''+u.id+'\')">삭제</button>':'')+'</div></div>';
+            }).join('');
+        }
+
+        // 사용자 권한 로드
+        async function loadUserPermissions() {
+            if (!currentUser) return;
+            try {
+                const { data } = await db.from('user_permissions').select('*').eq('user_id', currentUser.id).single();
+                if (data) {
+                    userPermissions = data;
+                } else {
+                    userPermissions = {};
+                }
+            } catch (e) { 
+                userPermissions = {}; 
+            }
+        }
+
+        // 권한 설정 모달 열기
+        async function openPermissionModal(userId, userName) {
+            document.getElementById('permUserId').value = userId;
+            document.getElementById('permUserName').textContent = userName;
+            
+            // 기존 권한 로드
+            try {
+                const { data } = await db.from('user_permissions').select('*').eq('user_id', userId).single();
+                if (data) {
+                    document.getElementById('permHideConcrete').checked = data.hide_concrete_company || false;
+                    document.getElementById('permHideConstruction').checked = data.hide_construction_company || false;
+                    document.getElementById('permHideScale').checked = data.hide_scale || false;
+                    document.getElementById('permHideMemo').checked = data.hide_memo || false;
+                    document.getElementById('permCanEdit').checked = data.can_edit_sales !== false;
+                    document.getElementById('permCanDelete').checked = data.can_delete_sales || false;
+                } else {
+                    // 기본값
+                    document.getElementById('permHideConcrete').checked = false;
+                    document.getElementById('permHideConstruction').checked = false;
+                    document.getElementById('permHideScale').checked = false;
+                    document.getElementById('permHideMemo').checked = false;
+                    document.getElementById('permCanEdit').checked = true;
+                    document.getElementById('permCanDelete').checked = false;
+                }
+            } catch (e) {
+                // 기본값
+                document.getElementById('permHideConcrete').checked = false;
+                document.getElementById('permHideConstruction').checked = false;
+                document.getElementById('permHideScale').checked = false;
+                document.getElementById('permHideMemo').checked = false;
+                document.getElementById('permCanEdit').checked = true;
+                document.getElementById('permCanDelete').checked = false;
+            }
+            openModal('permissionModal');
+        }
+
+        // 권한 저장
+        async function savePermissions() {
+            const userId = document.getElementById('permUserId').value;
+            const permData = {
+                user_id: userId,
+                hide_concrete_company: document.getElementById('permHideConcrete').checked,
+                hide_construction_company: document.getElementById('permHideConstruction').checked,
+                hide_scale: document.getElementById('permHideScale').checked,
+                hide_memo: document.getElementById('permHideMemo').checked,
+                can_edit_sales: document.getElementById('permCanEdit').checked,
+                can_delete_sales: document.getElementById('permCanDelete').checked,
+                updated_at: new Date().toISOString()
+            };
+            
+            setSyncStatus('syncing');
+            try {
+                await db.from('user_permissions').upsert(permData, { onConflict: 'user_id' });
+                closeModal('permissionModal');
+                alert('권한이 저장되었습니다.');
+                // 로그 기록
+                const user = users.find(u => u.id === userId);
+                await logActivity('update', 'user_permissions', userId, user ? user.name : '', { permissions: permData });
+            } catch (e) {
+                alert('권한 저장 오류: ' + e.message);
+            }
+            setSyncStatus('synced');
+        }
+
+        // 활동 로그 기록 함수
+        async function logActivity(actionType, targetTable, targetId, targetName, details = {}) {
+            if (!currentUser) return;
+            try {
+                await db.from('activity_logs').insert([{
+                    user_id: currentUser.id,
+                    user_name: currentUser.name,
+                    action_type: actionType,
+                    target_table: targetTable,
+                    target_id: targetId,
+                    target_name: targetName,
+                    details: details
+                }]);
+            } catch (e) {
+                console.error('로그 기록 오류:', e);
+            }
+        }
+
+        // 활동 로그 모달 열기
+        async function openActivityLogModal() {
+            // 사용자 필터 옵션 채우기
+            const userFilter = document.getElementById('logUserFilter');
+            userFilter.innerHTML = '<option value="all">모든 사용자</option>' + 
+                users.map(u => '<option value="'+u.id+'">'+u.name+'</option>').join('');
+            
+            await loadActivityLogs();
+            openModal('activityLogModal');
+        }
+
+        // 활동 로그 로드
+        async function loadActivityLogs() {
+            const userFilter = document.getElementById('logUserFilter').value;
+            const actionFilter = document.getElementById('logActionFilter').value;
+            const tableFilter = document.getElementById('logTableFilter').value;
+            
+            setSyncStatus('syncing');
+            try {
+                let query = db.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(100);
+                
+                if (userFilter !== 'all') query = query.eq('user_id', userFilter);
+                if (actionFilter !== 'all') query = query.eq('action_type', actionFilter);
+                if (tableFilter !== 'all') query = query.eq('target_table', tableFilter);
+                
+                const { data } = await query;
+                activityLogs = data || [];
+                renderActivityLogs();
+            } catch (e) {
+                console.error('로그 로드 오류:', e);
+                activityLogs = [];
+                renderActivityLogs();
+            }
+            setSyncStatus('synced');
+        }
+
+        // 활동 로그 렌더링
+        function renderActivityLogs() {
+            const tbody = document.getElementById('activityLogBody');
+            if (activityLogs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-light)">활동 로그가 없습니다.</td></tr>';
+                return;
+            }
+            
+            const actionText = { create: '추가', update: '수정', delete: '삭제', assign: '담당지정', unassign: '담당취소' };
+            const tableText = { sales_plan: '영업계획', sites: '현장', briefings: '브리핑', companies: '업체', user_permissions: '권한설정' };
+            const actionClass = { create: 'badge-active', update: 'badge-trading', delete: 'badge-pending', assign: 'badge-completed', unassign: 'badge-pending' };
+            
+            tbody.innerHTML = activityLogs.map(log => {
+                const time = new Date(log.created_at).toLocaleString('ko-KR');
+                const action = actionText[log.action_type] || log.action_type;
+                const table = tableText[log.target_table] || log.target_table;
+                const badgeClass = actionClass[log.action_type] || 'badge-active';
+                let detail = log.target_name || '-';
+                if (log.details && typeof log.details === 'object') {
+                    if (log.details.changes) detail += ' (' + log.details.changes + ')';
+                }
+                return '<tr><td style="white-space:nowrap;font-size:12px">'+time+'</td><td>'+log.user_name+'</td><td><span class="badge '+badgeClass+'">'+action+'</span></td><td>'+table+'</td><td style="max-width:300px;font-size:13px">'+detail+'</td></tr>';
             }).join('');
         }
 
@@ -904,6 +1109,16 @@
             const search = document.getElementById('searchSales').value.toLowerCase();
             const yearFilter = document.getElementById('salesYearFilter').value;
             const categoryFilter = document.getElementById('salesCategoryFilter').value;
+            
+            // 권한 확인 (관리자는 모두 표시)
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            const hideConcrete = !isAdmin && userPermissions.hide_concrete_company;
+            const hideConstruction = !isAdmin && userPermissions.hide_construction_company;
+            const hideScale = !isAdmin && userPermissions.hide_scale;
+            const hideMemo = !isAdmin && userPermissions.hide_memo;
+            const canEdit = isAdmin || userPermissions.can_edit_sales !== false;
+            const canDelete = isAdmin || userPermissions.can_delete_sales;
+            
             let filtered = salesPlans.filter(s => {
                 const matchSearch = (s.site_name && s.site_name.toLowerCase().includes(search)) || 
                                    (s.region && s.region.toLowerCase().includes(search)) ||
@@ -935,7 +1150,17 @@
                 container.innerHTML = '<div class="empty-state"><div class="icon">📈</div><h3>영업 계획 없음</h3><p>해당 조건의 영업 계획이 없습니다.</p></div>'; 
                 return; 
             }
-            let html = '<table><thead><tr><th style="text-align:center;min-width:80px">대분류</th><th style="text-align:center">지역</th><th>현장명</th><th style="text-align:center">구분</th><th style="text-align:center">골조사</th><th style="text-align:center">건설사</th><th style="text-align:center">규모</th><th style="text-align:center">착공일</th><th style="text-align:center">비고</th><th style="text-align:center;min-width:100px">영업 담당</th><th style="text-align:center">관리</th></tr></thead><tbody>';
+            // 헤더 생성 (권한에 따라 컬럼 숨기기)
+            let headerHtml = '<th style="text-align:center;min-width:80px">대분류</th><th style="text-align:center">지역</th><th>현장명</th><th style="text-align:center">구분</th>';
+            if (!hideConcrete) headerHtml += '<th style="text-align:center">골조사</th>';
+            if (!hideConstruction) headerHtml += '<th style="text-align:center">건설사</th>';
+            if (!hideScale) headerHtml += '<th style="text-align:center">규모</th>';
+            headerHtml += '<th style="text-align:center">착공일</th>';
+            if (!hideMemo) headerHtml += '<th style="text-align:center">비고</th>';
+            headerHtml += '<th style="text-align:center;min-width:100px">영업 담당</th>';
+            if (canEdit) headerHtml += '<th style="text-align:center">관리</th>';
+            
+            let html = '<table><thead><tr>' + headerHtml + '</tr></thead><tbody>';
             const now = new Date();
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
             filtered.forEach(s => {
@@ -947,7 +1172,18 @@
                 const isNew = s.created_at && new Date(s.created_at) > oneDayAgo;
                 const newBadge = isNew ? ' <span style="background:#fef3c7;color:#d97706;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600">NEW</span>' : '';
                 const rowStyle = isNew ? 'background-color:#fffbeb;' : '';
-                html += '<tr style="'+rowStyle+'"><td style="text-align:center">'+categoryBadge+'</td><td style="text-align:center">'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+newBadge+'</td><td style="text-align:center">'+(s.section||'-')+'</td><td style="text-align:center">'+(s.concrete_company||'-')+'</td><td style="text-align:center">'+(s.construction_company||'-')+'</td><td style="text-align:center">'+(s.scale||'-')+'</td><td style="text-align:center;white-space:nowrap">'+(s.start_date||'-')+'</td><td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td><td style="text-align:center">'+assignBtn+'</td><td style="text-align:center"><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td></tr>';
+                
+                // 행 생성 (권한에 따라 컬럼 숨기기)
+                let rowHtml = '<td style="text-align:center">'+categoryBadge+'</td><td style="text-align:center">'+(s.region||'-')+'</td><td class="company-name">'+(s.site_name||'-')+newBadge+'</td><td style="text-align:center">'+(s.section||'-')+'</td>';
+                if (!hideConcrete) rowHtml += '<td style="text-align:center">'+(s.concrete_company||'-')+'</td>';
+                if (!hideConstruction) rowHtml += '<td style="text-align:center">'+(s.construction_company||'-')+'</td>';
+                if (!hideScale) rowHtml += '<td style="text-align:center">'+(s.scale||'-')+'</td>';
+                rowHtml += '<td style="text-align:center;white-space:nowrap">'+(s.start_date||'-')+'</td>';
+                if (!hideMemo) rowHtml += '<td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td>';
+                rowHtml += '<td style="text-align:center">'+assignBtn+'</td>';
+                if (canEdit) rowHtml += '<td style="text-align:center"><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td>';
+                
+                html += '<tr style="'+rowStyle+'">' + rowHtml + '</tr>';
             });
             html += '</tbody></table>';
             container.innerHTML = html;
@@ -968,7 +1204,12 @@
                     assigned_at: new Date().toISOString() 
                 }).eq('id', id);
                 const plan = salesPlans.find(s => s.id === id);
-                if (plan) { plan.assigned_user = currentUser.name; plan.assigned_at = new Date().toISOString(); }
+                if (plan) { 
+                    plan.assigned_user = currentUser.name; 
+                    plan.assigned_at = new Date().toISOString();
+                    // 담당지정 로그 기록
+                    await logActivity('assign', 'sales_plan', id, plan.site_name, { assigned_to: currentUser.name });
+                }
                 renderSalesTable();
             } catch (e) { alert('담당 지정 오류'); }
             setSyncStatus('synced');
@@ -978,9 +1219,15 @@
             if (!confirm('담당 지정을 취소하시겠습니까?')) return;
             setSyncStatus('syncing');
             try {
-                await db.from('sales_plan').update({ assigned_user: null, assigned_at: null }).eq('id', id);
                 const plan = salesPlans.find(s => s.id === id);
-                if (plan) { plan.assigned_user = null; plan.assigned_at = null; }
+                const prevUser = plan ? plan.assigned_user : '';
+                await db.from('sales_plan').update({ assigned_user: null, assigned_at: null }).eq('id', id);
+                if (plan) { 
+                    plan.assigned_user = null; 
+                    plan.assigned_at = null;
+                    // 담당취소 로그 기록
+                    await logActivity('unassign', 'sales_plan', id, plan.site_name, { previous_user: prevUser });
+                }
                 renderSalesTable();
             } catch (e) { alert('취소 오류'); }
             setSyncStatus('synced');
@@ -1031,8 +1278,18 @@
             };
             setSyncStatus('syncing');
             try {
-                if (id) { await db.from('sales_plan').update(data).eq('id', id); }
-                else { await db.from('sales_plan').insert([data]); }
+                if (id) { 
+                    await db.from('sales_plan').update(data).eq('id', id); 
+                    // 수정 로그 기록
+                    await logActivity('update', 'sales_plan', id, siteName, { changes: '영업계획 수정' });
+                }
+                else { 
+                    const { data: inserted } = await db.from('sales_plan').insert([data]).select();
+                    // 추가 로그 기록
+                    if (inserted && inserted[0]) {
+                        await logActivity('create', 'sales_plan', inserted[0].id, siteName, { region: data.region, section: data.section });
+                    }
+                }
                 closeModal('salesPlanModal');
                 await loadAllData();
                 renderSalesTable();
@@ -1043,10 +1300,13 @@
 
         async function deleteSalesPlan() {
             const id = document.getElementById('salesPlanId').value;
+            const siteName = document.getElementById('salesSiteName').value.trim();
             if (!confirm('이 영업 계획을 삭제하시겠습니까?')) return;
             setSyncStatus('syncing');
             try {
                 await db.from('sales_plan').delete().eq('id', id);
+                // 삭제 로그 기록
+                await logActivity('delete', 'sales_plan', id, siteName, {});
                 closeModal('salesPlanModal');
                 await loadAllData();
                 renderSalesTable();
