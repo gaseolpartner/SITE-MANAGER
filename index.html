@@ -218,6 +218,7 @@
                         </div>
                         <button class="btn btn-success btn-sm" id="addSalesPlanBtn" onclick="openSalesPlanModal()">➕ 추가</button>
                         <button class="btn btn-primary btn-sm" onclick="openExcelUploadModal()">📁 엑셀 업로드</button>
+                        <button class="btn btn-secondary btn-sm" id="sqlPasteBtn" style="display:none" onclick="openSqlPasteModal()">📋 SQL 붙여넣기</button>
                     </div>
                     <div class="table-container" id="salesTableContainer"><div class="loading"><div class="spinner"></div><p>데이터를 불러오는 중...</p></div></div>
                 </div>
@@ -371,6 +372,37 @@
             </div>
         </div>
     </div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('excelUploadModal')">취소</button><button class="btn btn-primary" id="excelImportBtn" onclick="importExcelData()" disabled>추가하기</button></div></div></div>
+    <!-- SQL 데이터 붙여넣기 모달 -->
+    <div class="modal-overlay" id="sqlPasteModal"><div class="modal" style="max-width:900px"><div class="modal-header"><h2>📋 SQL 데이터 붙여넣기</h2><button class="modal-close" onclick="closeModal('sqlPasteModal')">&times;</button></div><div class="modal-body">
+        <p style="margin-bottom:12px;color:var(--text-light);font-size:14px">Supabase에서 사용하던 INSERT SQL문을 그대로 붙여넣으세요. 자동으로 파싱하여 데이터를 추가합니다.</p>
+        <div style="background:var(--bg);padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:12px;color:var(--text-light)">
+            <strong>지원 형식 예시:</strong><br>
+            INSERT INTO sales_plan (region, site_name, ...) VALUES ('서울', '현장명', ...);<br>
+            여러 줄 한번에 붙여넣기 가능합니다.
+        </div>
+        <div class="form-group">
+            <label class="form-label">테이블 선택</label>
+            <select class="form-select" id="sqlTargetTable">
+                <option value="sales_plan">📈 영업 계획 (sales_plan)</option>
+                <option value="companies">🏢 업체 (companies)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">SQL INSERT문 붙여넣기</label>
+            <textarea class="form-textarea" id="sqlPasteContent" rows="12" placeholder="INSERT INTO sales_plan (region, site_name, section, concrete_company, construction_company, scale, start_date, memo) VALUES ('서울', '방화 6구역', '재개발', '원영건업', '삼성물산', 'B2/24F', '25년 9월', '');" style="font-family:'SF Mono',Consolas,monospace;font-size:12px"></textarea>
+        </div>
+        <div id="sqlPreview" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <label class="form-label" style="margin:0">미리보기 (<span id="sqlPreviewCount">0</span>개 데이터)</label>
+                <span style="font-size:12px;color:var(--success);font-weight:600" id="sqlParseStatus"></span>
+            </div>
+            <div class="table-container" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <table id="sqlPreviewTable"><thead></thead><tbody></tbody></table>
+            </div>
+        </div>
+        <div id="sqlError" style="display:none;padding:12px;background:#fef2f2;color:var(--danger);border-radius:var(--radius-sm);font-size:13px;margin-top:12px"></div>
+    </div><div class="modal-footer"><button class="btn btn-secondary" onclick="parseSqlPreview()" style="margin-right:auto">🔍 미리보기</button><button class="btn btn-secondary" onclick="closeModal('sqlPasteModal')">취소</button><button class="btn btn-primary" id="sqlImportBtn" onclick="importSqlData()" disabled>추가하기</button></div></div></div>
+
     <div class="modal-overlay" id="companyEditModal"><div class="modal"><div class="modal-header"><h2 id="companyEditModalTitle">업체 추가</h2><button class="modal-close" onclick="closeModal('companyEditModal')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="companyEditId"><input type="hidden" id="companyEditType">
         <div class="form-row">
@@ -477,6 +509,7 @@
                 document.getElementById('adminBtns').style.display = 'block';
                 document.getElementById('addConcreteBtn').style.display = 'block';
                 document.getElementById('addStoneBtn').style.display = 'block';
+                document.getElementById('sqlPasteBtn').style.display = 'inline-flex';
             }
             await loadCompaniesFromDB();
             await loadAllData();
@@ -1485,6 +1518,187 @@
                 alert(excelParsedData.length + '개 현장이 추가되었습니다!');
             } catch (e) {
                 alert('추가 오류: ' + e.message);
+            }
+            setSyncStatus('synced');
+        }
+
+        // SQL 붙여넣기 관련
+        let sqlParsedData = [];
+
+        function openSqlPasteModal() {
+            document.getElementById('sqlPasteContent').value = '';
+            document.getElementById('sqlPreview').style.display = 'none';
+            document.getElementById('sqlError').style.display = 'none';
+            document.getElementById('sqlImportBtn').disabled = true;
+            sqlParsedData = [];
+            openModal('sqlPasteModal');
+        }
+
+        function parseSqlValues(valuesStr) {
+            // SQL VALUES 절에서 각 값을 파싱 (따옴표 안의 쉼표 처리)
+            const values = [];
+            let current = '';
+            let inQuote = false;
+            let quoteChar = '';
+
+            for (let i = 0; i < valuesStr.length; i++) {
+                const ch = valuesStr[i];
+                if (inQuote) {
+                    if (ch === quoteChar) {
+                        // 이스케이프된 따옴표 ('') 처리
+                        if (i + 1 < valuesStr.length && valuesStr[i + 1] === quoteChar) {
+                            current += ch;
+                            i++; // 다음 따옴표 건너뛰기
+                        } else {
+                            inQuote = false;
+                        }
+                    } else {
+                        current += ch;
+                    }
+                } else {
+                    if (ch === "'" || ch === '"') {
+                        inQuote = true;
+                        quoteChar = ch;
+                    } else if (ch === ',') {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += ch;
+                    }
+                }
+            }
+            values.push(current.trim());
+            return values;
+        }
+
+        function parseSqlInserts(sql) {
+            const results = [];
+            const errors = [];
+
+            // INSERT INTO ... VALUES ... 패턴 찾기
+            const insertRegex = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*\(([^;]+)\)/gi;
+            let match;
+
+            while ((match = insertRegex.exec(sql)) !== null) {
+                try {
+                    const columns = match[2].split(',').map(c => c.trim().replace(/["`]/g, ''));
+                    const valuesStr = match[3];
+                    const values = parseSqlValues(valuesStr);
+
+                    if (columns.length !== values.length) {
+                        errors.push('컬럼 수(' + columns.length + ')와 값 수(' + values.length + ')가 일치하지 않습니다.');
+                        continue;
+                    }
+
+                    const row = {};
+                    columns.forEach((col, idx) => {
+                        let val = values[idx];
+                        // NULL 처리
+                        if (val.toUpperCase() === 'NULL') val = null;
+                        row[col] = val;
+                    });
+                    results.push(row);
+                } catch (e) {
+                    errors.push('파싱 오류: ' + e.message);
+                }
+            }
+
+            return { data: results, errors };
+        }
+
+        function parseSqlPreview() {
+            const sql = document.getElementById('sqlPasteContent').value.trim();
+            const errorDiv = document.getElementById('sqlError');
+            const previewDiv = document.getElementById('sqlPreview');
+
+            if (!sql) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'SQL문을 붙여넣어주세요.';
+                previewDiv.style.display = 'none';
+                document.getElementById('sqlImportBtn').disabled = true;
+                return;
+            }
+
+            const { data, errors } = parseSqlInserts(sql);
+            sqlParsedData = data;
+
+            if (errors.length > 0) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '⚠️ 파싱 경고:<br>' + errors.join('<br>');
+            } else {
+                errorDiv.style.display = 'none';
+            }
+
+            if (data.length === 0) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = '파싱할 수 있는 INSERT문을 찾지 못했습니다. SQL 형식을 확인해주세요.';
+                previewDiv.style.display = 'none';
+                document.getElementById('sqlImportBtn').disabled = true;
+                return;
+            }
+
+            // 미리보기 렌더링
+            document.getElementById('sqlPreviewCount').textContent = data.length;
+            document.getElementById('sqlParseStatus').textContent = '✅ ' + data.length + '개 파싱 완료';
+
+            const columns = Object.keys(data[0]);
+            const thead = document.querySelector('#sqlPreviewTable thead');
+            const tbody = document.querySelector('#sqlPreviewTable tbody');
+
+            // 컬럼명 한글 매핑
+            const colNames = {
+                region: '지역', site_name: '현장명', section: '구분',
+                concrete_company: '골조사', construction_company: '건설사',
+                scale: '규모', start_date: '착공일', memo: '비고', category: '대분류',
+                company_type: '구분', rank: '순위', name: '업체명', ceo: '대표자',
+                location: '소재지', amount: '시공능력', status: '상태'
+            };
+
+            thead.innerHTML = '<tr>' + columns.map(c => '<th>' + (colNames[c] || c) + '</th>').join('') + '</tr>';
+            tbody.innerHTML = data.slice(0, 50).map(row =>
+                '<tr>' + columns.map(c => '<td>' + (row[c] || '-') + '</td>').join('') + '</tr>'
+            ).join('');
+
+            previewDiv.style.display = 'block';
+            document.getElementById('sqlImportBtn').disabled = false;
+        }
+
+        async function importSqlData() {
+            if (sqlParsedData.length === 0) {
+                alert('추가할 데이터가 없습니다. 먼저 미리보기를 실행하세요.');
+                return;
+            }
+
+            const targetTable = document.getElementById('sqlTargetTable').value;
+            if (!confirm(sqlParsedData.length + '개 데이터를 ' + targetTable + ' 테이블에 추가하시겠습니까?')) return;
+
+            setSyncStatus('syncing');
+            try {
+                // id, created_at 등 자동 생성 필드 제거
+                const cleanData = sqlParsedData.map(row => {
+                    const clean = { ...row };
+                    delete clean.id;
+                    delete clean.created_at;
+                    delete clean.updated_at;
+                    delete clean.assigned_user;
+                    delete clean.assigned_at;
+                    return clean;
+                });
+
+                const { error } = await db.from(targetTable).insert(cleanData);
+                if (error) throw error;
+
+                closeModal('sqlPasteModal');
+                await loadAllData();
+                renderSalesTable();
+                if (targetTable === 'companies') {
+                    await loadCompaniesFromDB();
+                    renderConcreteTable();
+                    renderStoneTable();
+                }
+                alert(sqlParsedData.length + '개 데이터가 성공적으로 추가되었습니다!');
+            } catch (e) {
+                alert('추가 오류: ' + (e.message || e));
             }
             setSyncStatus('synced');
         }
