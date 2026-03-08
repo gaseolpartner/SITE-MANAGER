@@ -174,7 +174,7 @@
                 <div class="tab-panel" id="panel-briefing">
                     <div class="briefing-header">
                         <div class="briefing-date"><h2>📅 <span id="briefingDateDisplay">오늘</span></h2><select id="briefingDateSelect" onchange="loadBriefing(this.value)"></select></div>
-                        <div><button class="btn btn-primary btn-sm" onclick="openPasteModal()">📋 붙여넣기로 추가</button></div>
+                        <div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" onclick="openGeminiImportModal()">🤖 Gemini 가져오기</button><button class="btn btn-secondary btn-sm" onclick="openPasteModal()">📋 수동 추가</button></div>
                     </div>
                     <div id="briefingContent"></div>
                 </div>
@@ -403,6 +403,19 @@
         <div id="sqlError" style="display:none;padding:12px;background:#fef2f2;color:var(--danger);border-radius:var(--radius-sm);font-size:13px;margin-top:12px"></div>
     </div><div class="modal-footer"><button class="btn btn-secondary" onclick="parseSqlPreview()" style="margin-right:auto">🔍 미리보기</button><button class="btn btn-secondary" onclick="closeModal('sqlPasteModal')">취소</button><button class="btn btn-primary" id="sqlImportBtn" onclick="importSqlData()" disabled>추가하기</button></div></div></div>
 
+    <!-- Gemini 통합 가져오기 모달 -->
+    <div class="modal-overlay" id="geminiImportModal"><div class="modal" style="max-width:900px"><div class="modal-header"><h2>🤖 Gemini 통합 가져오기</h2><button class="modal-close" onclick="closeModal('geminiImportModal')">&times;</button></div><div class="modal-body">
+        <p style="margin-bottom:12px;color:var(--text-light);font-size:14px">Gemini에서 받은 <strong>전체 내용</strong>을 그대로 붙여넣으세요. 브리핑과 SQL을 자동으로 분리하여 처리합니다.</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+            <div style="flex:1;min-width:200px;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);font-size:12px;text-align:center"><strong>📋 브리핑</strong><br><span style="color:var(--text-light)">→ 일일 브리핑 탭에 저장</span></div>
+            <div style="flex:1;min-width:200px;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);font-size:12px;text-align:center"><strong>💾 SQL UPDATE</strong><br><span style="color:var(--text-light)">→ 영업 계획 memo 업데이트</span></div>
+        </div>
+        <div class="form-group">
+            <textarea class="form-textarea" id="geminiRawContent" rows="14" placeholder="Gemini 전체 내용을 여기에 붙여넣으세요..." style="font-size:13px"></textarea>
+        </div>
+        <div id="geminiParseResult" style="display:none"></div>
+    </div><div class="modal-footer"><button class="btn btn-secondary" onclick="analyzeGeminiContent()" style="margin-right:auto">🔍 분석하기</button><button class="btn btn-secondary" onclick="closeModal('geminiImportModal')">취소</button><button class="btn btn-primary" id="geminiImportBtn" onclick="executeGeminiImport()" disabled>가져오기</button></div></div></div>
+
     <div class="modal-overlay" id="companyEditModal"><div class="modal"><div class="modal-header"><h2 id="companyEditModalTitle">업체 추가</h2><button class="modal-close" onclick="closeModal('companyEditModal')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="companyEditId"><input type="hidden" id="companyEditType">
         <div class="form-row">
@@ -542,16 +555,20 @@
         }
 
         // 브리핑
+        function getLocalDateStr(date) {
+            const d = date || new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
         function initBriefingDates() {
             const select = document.getElementById('briefingDateSelect'), today = new Date();
             for (let i = 0; i < 7; i++) {
                 const date = new Date(today); date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
+                const dateStr = getLocalDateStr(date);
                 const option = document.createElement('option');
                 option.value = dateStr; option.textContent = formatDateKorean(date);
                 select.appendChild(option);
             }
-            document.getElementById('pasteDate').value = today.toISOString().split('T')[0];
+            document.getElementById('pasteDate').value = getLocalDateStr(today);
         }
 
         function formatDateKorean(date) {
@@ -560,8 +577,8 @@
         }
 
         async function loadBriefingFromDB(dateStr) {
-            if (!dateStr) dateStr = new Date().toISOString().split('T')[0];
-            document.getElementById('briefingDateDisplay').textContent = formatDateKorean(new Date(dateStr));
+            if (!dateStr) dateStr = getLocalDateStr();
+            document.getElementById('briefingDateDisplay').textContent = formatDateKorean(new Date(dateStr + 'T00:00:00'));
             setSyncStatus('syncing');
             try {
                 const { data } = await db.from('briefings').select('*').eq('date', dateStr).single();
@@ -574,7 +591,7 @@
         function loadBriefing(dateStr) { loadBriefingFromDB(dateStr); }
 
         function renderBriefing(dateStr) {
-            if (!dateStr) dateStr = new Date().toISOString().split('T')[0];
+            if (!dateStr) dateStr = getLocalDateStr();
             const data = briefings[dateStr], container = document.getElementById('briefingContent');
             if (!data || !data.raw_content) {
                 container.innerHTML = '<div class="no-briefing"><div class="icon">📭</div><h3>등록된 브리핑이 없습니다</h3><p>이 날짜에 브리핑을 추가해보세요.</p><button class="btn btn-primary" onclick="openPasteModal()">📋 붙여넣기로 추가</button></div>';
@@ -589,7 +606,7 @@
             container.innerHTML = '<div class="analysis-card" style="background:#fff;padding:24px;line-height:1.8">' + html + '</div>';
         }
 
-        function openPasteModal() { document.getElementById('pasteContent').value = ''; document.getElementById('pasteDate').value = new Date().toISOString().split('T')[0]; openModal('pasteModal'); }
+        function openPasteModal() { document.getElementById('pasteContent').value = ''; document.getElementById('pasteDate').value = getLocalDateStr(); openModal('pasteModal'); }
 
         async function savePastedBriefing() {
             const dateStr = document.getElementById('pasteDate').value, content = document.getElementById('pasteContent').value;
@@ -1699,6 +1716,170 @@
                 alert(sqlParsedData.length + '개 데이터가 성공적으로 추가되었습니다!');
             } catch (e) {
                 alert('추가 오류: ' + (e.message || e));
+            }
+            setSyncStatus('synced');
+        }
+
+        // Gemini 통합 가져오기
+        let geminiParsed = { date: '', briefing: '', updates: [], inserts: [] };
+
+        function openGeminiImportModal() {
+            document.getElementById('geminiRawContent').value = '';
+            document.getElementById('geminiParseResult').style.display = 'none';
+            document.getElementById('geminiImportBtn').disabled = true;
+            geminiParsed = { date: '', briefing: '', updates: [], inserts: [] };
+            openModal('geminiImportModal');
+        }
+
+        function analyzeGeminiContent() {
+            const raw = document.getElementById('geminiRawContent').value.trim();
+            if (!raw) { alert('내용을 붙여넣어주세요.'); return; }
+            geminiParsed = { date: '', briefing: '', updates: [], inserts: [] };
+
+            // 1. 날짜 추출 (일일 브리핑 헤더에서)
+            const dateMatch = raw.match(/일일\s*브리핑\s*\((\d{4})\.(\d{2})\.(\d{2})\)/);
+            geminiParsed.date = dateMatch
+                ? dateMatch[1] + '-' + dateMatch[2] + '-' + dateMatch[3]
+                : getLocalDateStr();
+
+            // 2. 브리핑 내용 추출 (SQL 섹션 앞까지)
+            const sqlMarkerIdx = raw.search(/💾\s*\[DB\s*업로드용\]/);
+            geminiParsed.briefing = sqlMarkerIdx > 0
+                ? raw.substring(0, sqlMarkerIdx).trim()
+                : raw;
+
+            // 3. UPDATE문 파싱
+            const updateRegex = /UPDATE\s+(\w+)\s+SET\s+(\w+)\s*=\s*'((?:[^']|'')*)'\s*(?:WHERE\s+(\w+)\s*=\s*'((?:[^']|'')*)')?\s*;/gi;
+            let match;
+            while ((match = updateRegex.exec(raw)) !== null) {
+                geminiParsed.updates.push({
+                    table: match[1],
+                    setCol: match[2],
+                    setVal: match[3].replace(/''/g, "'"),
+                    whereCol: match[4] || '',
+                    whereVal: match[5] ? match[5].replace(/''/g, "'") : ''
+                });
+            }
+
+            // 4. INSERT문 파싱
+            const insertRegex = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*\(([^;]+)\)/gi;
+            while ((match = insertRegex.exec(raw)) !== null) {
+                try {
+                    const cols = match[2].split(',').map(c => c.trim().replace(/["`]/g, ''));
+                    const vals = parseSqlValues(match[3]);
+                    if (cols.length === vals.length) {
+                        const row = {};
+                        cols.forEach((c, i) => { row[c] = vals[i].toUpperCase() === 'NULL' ? null : vals[i]; });
+                        geminiParsed.inserts.push({ table: match[1], data: row });
+                    }
+                } catch (e) {}
+            }
+
+            // 결과 표시
+            const resultDiv = document.getElementById('geminiParseResult');
+            let html = '';
+
+            if (geminiParsed.briefing) {
+                const d = new Date(geminiParsed.date + 'T00:00:00');
+                const days = ['일','월','화','수','목','금','토'];
+                const dateLabel = d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 (' + days[d.getDay()] + ')';
+                html += '<div style="padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;margin-bottom:10px">';
+                html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:16px">✅</span><strong style="font-size:14px">일일 브리핑</strong><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">' + dateLabel + '</span></div>';
+                html += '<p style="font-size:12px;color:#6b7280;margin:0;line-height:1.5">' + geminiParsed.briefing.substring(0, 200).replace(/</g, '&lt;').replace(/\n/g, ' ') + '...</p>';
+                html += '</div>';
+            }
+
+            if (geminiParsed.updates.length > 0) {
+                html += '<div style="padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin-bottom:10px">';
+                html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:16px">✅</span><strong style="font-size:14px">SQL UPDATE</strong><span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">' + geminiParsed.updates.length + '건</span></div>';
+                geminiParsed.updates.forEach(u => {
+                    html += '<div style="padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px">📌 <strong>' + (u.whereVal || u.table).replace(/</g, '&lt;') + '</strong><br><span style="color:#6b7280;margin-left:20px">' + u.setCol + ' = ' + u.setVal.substring(0, 80).replace(/</g, '&lt;') + (u.setVal.length > 80 ? '...' : '') + '</span></div>';
+                });
+                html += '</div>';
+            }
+
+            if (geminiParsed.inserts.length > 0) {
+                html += '<div style="padding:12px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;margin-bottom:10px">';
+                html += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">✅</span><strong style="font-size:14px">SQL INSERT (신규)</strong><span style="background:#f59e0b;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">' + geminiParsed.inserts.length + '건</span></div>';
+                html += '</div>';
+            }
+
+            if (!geminiParsed.briefing && geminiParsed.updates.length === 0 && geminiParsed.inserts.length === 0) {
+                html = '<div style="padding:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;text-align:center;color:#dc2626">❌ 파싱할 수 있는 내용을 찾지 못했습니다.</div>';
+                document.getElementById('geminiImportBtn').disabled = true;
+            } else {
+                document.getElementById('geminiImportBtn').disabled = false;
+            }
+
+            resultDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+        }
+
+        async function executeGeminiImport() {
+            const totalSql = geminiParsed.updates.length + geminiParsed.inserts.length;
+            if (!confirm('다음을 실행합니다:\n\n📋 브리핑 저장 (' + geminiParsed.date + ')\n💾 SQL ' + totalSql + '건 실행\n\n진행하시겠습니까?')) return;
+
+            setSyncStatus('syncing');
+            const results = { briefing: false, updates: 0, updateFails: [], inserts: 0 };
+
+            try {
+                // 1. 브리핑 저장
+                if (geminiParsed.briefing && geminiParsed.date) {
+                    await db.from('briefings').upsert({
+                        date: geminiParsed.date,
+                        raw_content: geminiParsed.briefing,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'date' });
+                    briefings[geminiParsed.date] = { date: geminiParsed.date, raw_content: geminiParsed.briefing };
+                    results.briefing = true;
+                }
+
+                // 2. UPDATE 실행
+                for (const u of geminiParsed.updates) {
+                    try {
+                        const { data, error } = await db.from(u.table)
+                            .update({ [u.setCol]: u.setVal })
+                            .eq(u.whereCol, u.whereVal)
+                            .select();
+                        if (error) throw error;
+                        if (data && data.length > 0) {
+                            results.updates++;
+                        } else {
+                            results.updateFails.push(u.whereVal);
+                        }
+                    } catch (e) {
+                        results.updateFails.push(u.whereVal + ' (오류)');
+                    }
+                }
+
+                // 3. INSERT 실행
+                for (const ins of geminiParsed.inserts) {
+                    try {
+                        const clean = { ...ins.data };
+                        delete clean.id; delete clean.created_at; delete clean.updated_at;
+                        delete clean.assigned_user; delete clean.assigned_at;
+                        await db.from(ins.table).insert([clean]);
+                        results.inserts++;
+                    } catch (e) {}
+                }
+
+                // 4. 데이터 새로고침
+                await loadAllData();
+                renderSalesTable();
+                document.getElementById('briefingDateSelect').value = geminiParsed.date;
+                loadBriefing(geminiParsed.date);
+
+                closeModal('geminiImportModal');
+
+                // 결과 알림
+                let msg = '✅ 가져오기 완료!\n';
+                if (results.briefing) msg += '\n📋 브리핑 저장됨 (' + geminiParsed.date + ')';
+                if (results.updates > 0) msg += '\n📊 UPDATE ' + results.updates + '건 성공';
+                if (results.updateFails.length > 0) msg += '\n⚠️ UPDATE 미적용 ' + results.updateFails.length + '건:\n  - ' + results.updateFails.join('\n  - ');
+                if (results.inserts > 0) msg += '\n➕ INSERT ' + results.inserts + '건 성공';
+                alert(msg);
+            } catch (e) {
+                alert('오류 발생: ' + (e.message || e));
             }
             setSyncStatus('synced');
         }
