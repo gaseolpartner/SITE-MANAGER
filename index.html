@@ -376,8 +376,9 @@
     <div class="modal-overlay" id="sqlPasteModal"><div class="modal" style="max-width:900px"><div class="modal-header"><h2>📋 SQL 데이터 붙여넣기</h2><button class="modal-close" onclick="closeModal('sqlPasteModal')">&times;</button></div><div class="modal-body">
         <p style="margin-bottom:12px;color:var(--text-light);font-size:14px">Supabase에서 사용하던 INSERT SQL문을 그대로 붙여넣으세요. 자동으로 파싱하여 데이터를 추가합니다.</p>
         <div style="background:var(--bg);padding:12px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:12px;color:var(--text-light)">
-            <strong>지원 형식 예시:</strong><br>
-            INSERT INTO sales_plan (region, site_name, ...) VALUES ('서울', '현장명', ...);<br>
+            <strong>지원 형식:</strong><br>
+            ✅ INSERT INTO ... VALUES (단일/다중 행)<br>
+            ✅ ON CONFLICT ... DO UPDATE SET (UPSERT 자동 처리)<br>
             여러 줄 한번에 붙여넣기 가능합니다.
         </div>
         <div class="form-group">
@@ -552,6 +553,10 @@
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById('panel-' + tabId).classList.add('active');
+            if (tabId === 'briefing') {
+                const sel = document.getElementById('briefingDateSelect');
+                if (sel.value) loadBriefing(sel.value);
+            }
         }
 
         // 브리핑
@@ -561,6 +566,7 @@
         }
         function initBriefingDates() {
             const select = document.getElementById('briefingDateSelect'), today = new Date();
+            select.innerHTML = '';
             for (let i = 0; i < 7; i++) {
                 const date = new Date(today); date.setDate(date.getDate() - i);
                 const dateStr = getLocalDateStr(date);
@@ -568,7 +574,10 @@
                 option.value = dateStr; option.textContent = formatDateKorean(date);
                 select.appendChild(option);
             }
-            document.getElementById('pasteDate').value = getLocalDateStr(today);
+            const todayStr = getLocalDateStr(today);
+            document.getElementById('pasteDate').value = todayStr;
+            document.getElementById('briefingDateDisplay').textContent = formatDateKorean(today);
+            loadBriefing(todayStr);
         }
 
         function formatDateKorean(date) {
@@ -1540,7 +1549,7 @@
         }
 
         // SQL 붙여넣기 관련
-        let sqlParsedData = [];
+        let sqlParsedData = [], sqlOnConflictCol = '';
 
         function openSqlPasteModal() {
             document.getElementById('sqlPasteContent').value = '';
@@ -1591,36 +1600,72 @@
         function parseSqlInserts(sql) {
             const results = [];
             const errors = [];
+            let onConflictCol = '';
 
-            // INSERT INTO ... VALUES ... 패턴 찾기
-            const insertRegex = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*\(([^;]+)\)/gi;
+            // ON CONFLICT 감지 및 충돌 컬럼 추출
+            const conflictMatch = sql.match(/ON\s+CONFLICT\s*\((\w+)\)/i);
+            if (conflictMatch) onConflictCol = conflictMatch[1];
+
+            // ON CONFLICT 절 제거 (파싱 방해 방지)
+            let cleanSql = sql.replace(/\)\s*ON\s+CONFLICT\s*\([^)]*\)\s*DO\s+UPDATE\s+SET\s+[^;]*/gi, ')');
+
+            // INSERT INTO ... VALUES ... 패턴 찾기 (multi-row 지원)
+            const insertRegex = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s+([\s\S]+?)(?=;\s*$|;\s*\n|$)/gim;
             let match;
 
-            while ((match = insertRegex.exec(sql)) !== null) {
+            while ((match = insertRegex.exec(cleanSql)) !== null) {
                 try {
                     const columns = match[2].split(',').map(c => c.trim().replace(/["`]/g, ''));
-                    const valuesStr = match[3];
-                    const values = parseSqlValues(valuesStr);
+                    const allValuesStr = match[3].trim().replace(/;$/, '').trim();
 
-                    if (columns.length !== values.length) {
-                        errors.push('컬럼 수(' + columns.length + ')와 값 수(' + values.length + ')가 일치하지 않습니다.');
-                        continue;
+                    // multi-row VALUES (...), (...) 분리
+                    const valueRows = [];
+                    let depth = 0, current = '', inQuote = false, qChar = '';
+                    for (let i = 0; i < allValuesStr.length; i++) {
+                        const ch = allValuesStr[i];
+                        if (inQuote) {
+                            current += ch;
+                            if (ch === qChar) {
+                                if (i + 1 < allValuesStr.length && allValuesStr[i + 1] === qChar) {
+                                    current += allValuesStr[++i];
+                                } else {
+                                    inQuote = false;
+                                }
+                            }
+                        } else if (ch === "'" || ch === '"') {
+                            inQuote = true; qChar = ch; current += ch;
+                        } else if (ch === '(') {
+                            if (depth === 0) current = ''; else current += ch;
+                            depth++;
+                        } else if (ch === ')') {
+                            depth--;
+                            if (depth === 0) valueRows.push(current); else current += ch;
+                        } else {
+                            if (depth > 0) current += ch;
+                        }
                     }
 
-                    const row = {};
-                    columns.forEach((col, idx) => {
-                        let val = values[idx];
-                        // NULL 처리
-                        if (val.toUpperCase() === 'NULL') val = null;
-                        row[col] = val;
-                    });
-                    results.push(row);
+                    // 각 row 파싱
+                    for (const valStr of valueRows) {
+                        const values = parseSqlValues(valStr);
+                        if (columns.length !== values.length) {
+                            errors.push('컬럼 수(' + columns.length + ')와 값 수(' + values.length + ')가 일치하지 않습니다.');
+                            continue;
+                        }
+                        const row = {};
+                        columns.forEach((col, idx) => {
+                            let val = values[idx];
+                            if (val.toUpperCase() === 'NULL') val = null;
+                            row[col] = val;
+                        });
+                        results.push(row);
+                    }
                 } catch (e) {
                     errors.push('파싱 오류: ' + e.message);
                 }
             }
 
-            return { data: results, errors };
+            return { data: results, errors, onConflictCol };
         }
 
         function parseSqlPreview() {
@@ -1636,8 +1681,9 @@
                 return;
             }
 
-            const { data, errors } = parseSqlInserts(sql);
+            const { data, errors, onConflictCol } = parseSqlInserts(sql);
             sqlParsedData = data;
+            sqlOnConflictCol = onConflictCol;
 
             if (errors.length > 0) {
                 errorDiv.style.display = 'block';
@@ -1655,8 +1701,9 @@
             }
 
             // 미리보기 렌더링
+            const modeLabel = onConflictCol ? ' (UPSERT: ' + onConflictCol + ' 기준 중복시 업데이트)' : '';
             document.getElementById('sqlPreviewCount').textContent = data.length;
-            document.getElementById('sqlParseStatus').textContent = '✅ ' + data.length + '개 파싱 완료';
+            document.getElementById('sqlParseStatus').textContent = '✅ ' + data.length + '개 파싱 완료' + modeLabel;
 
             const columns = Object.keys(data[0]);
             const thead = document.querySelector('#sqlPreviewTable thead');
@@ -1687,7 +1734,8 @@
             }
 
             const targetTable = document.getElementById('sqlTargetTable').value;
-            if (!confirm(sqlParsedData.length + '개 데이터를 ' + targetTable + ' 테이블에 추가하시겠습니까?')) return;
+            const mode = sqlOnConflictCol ? 'UPSERT (' + sqlOnConflictCol + ' 기준)' : 'INSERT';
+            if (!confirm(sqlParsedData.length + '개 데이터를 ' + targetTable + ' 테이블에 ' + mode + ' 하시겠습니까?')) return;
 
             setSyncStatus('syncing');
             try {
@@ -1702,8 +1750,42 @@
                     return clean;
                 });
 
-                const { error } = await db.from(targetTable).insert(cleanData);
-                if (error) throw error;
+                let resultMsg = '';
+                if (sqlOnConflictCol) {
+                    // UPSERT: 기존 데이터 있으면 UPDATE, 없으면 INSERT
+                    let inserted = 0, updated = 0, failed = [];
+                    for (const row of cleanData) {
+                        const matchVal = row[sqlOnConflictCol];
+                        if (!matchVal) { failed.push('빈 키값'); continue; }
+                        try {
+                            // 기존 데이터 확인
+                            const { data: existing } = await db.from(targetTable)
+                                .select('id')
+                                .eq(sqlOnConflictCol, matchVal)
+                                .maybeSingle();
+                            if (existing) {
+                                // UPDATE
+                                const updateData = { ...row };
+                                delete updateData[sqlOnConflictCol];
+                                await db.from(targetTable).update(updateData).eq(sqlOnConflictCol, matchVal);
+                                updated++;
+                            } else {
+                                // INSERT
+                                await db.from(targetTable).insert([row]);
+                                inserted++;
+                            }
+                        } catch (e) {
+                            failed.push(matchVal + ': ' + (e.message || e));
+                        }
+                    }
+                    resultMsg = '완료! (신규 ' + inserted + '건, 업데이트 ' + updated + '건)';
+                    if (failed.length > 0) resultMsg += '\n⚠️ 실패 ' + failed.length + '건:\n' + failed.join('\n');
+                } else {
+                    // 일반 INSERT
+                    const { error } = await db.from(targetTable).insert(cleanData);
+                    if (error) throw error;
+                    resultMsg = cleanData.length + '개 데이터가 성공적으로 추가되었습니다!';
+                }
 
                 closeModal('sqlPasteModal');
                 await loadAllData();
@@ -1713,7 +1795,7 @@
                     renderConcreteTable();
                     renderStoneTable();
                 }
-                alert(sqlParsedData.length + '개 데이터가 성공적으로 추가되었습니다!');
+                alert(resultMsg);
             } catch (e) {
                 alert('추가 오류: ' + (e.message || e));
             }
