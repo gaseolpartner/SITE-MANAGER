@@ -67,8 +67,8 @@ module.exports = async (req, res) => {
     if (spError) throw spError;
 
     const today = getKSTDateStr();
-    const [y, m, d] = today.split('-');
-    const headerDate = `${y}.${m}.${d}`;
+    const [y, mo, d] = today.split('-');
+    const headerDate = `${y}.${mo}.${d}`;
 
     const contextRows = (salesPlan || []).slice(0, 40).map(s => ({
       site: s.site_name,
