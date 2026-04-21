@@ -1,16 +1,15 @@
 {
   "version": 2,
   "name": "site-manager",
-  "builds": [
-    {
-      "src": "**/*",
-      "use": "@vercel/static"
+  "functions": {
+    "api/daily-briefing.js": {
+      "maxDuration": 60
     }
-  ],
-  "routes": [
+  },
+  "crons": [
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "path": "/api/daily-briefing",
+      "schedule": "0 23 * * *"
     }
   ]
 }
