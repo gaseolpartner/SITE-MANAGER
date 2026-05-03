@@ -31,14 +31,14 @@ function parseSqlValues(valStr) {
 }
 
 async function callGemini(prompt, apiKey) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       tools: [{ google_search: {} }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
+      generationConfig: { temperature: 0.7, maxOutputTokens: 8192 }
     })
   });
   const json = await res.json();
@@ -67,8 +67,8 @@ module.exports = async (req, res) => {
     if (spError) throw spError;
 
     const today = getKSTDateStr();
-    const [y, mo, d] = today.split('-');
-    const headerDate = `${y}.${mo}.${d}`;
+    const [y, m, d] = today.split('-');
+    const headerDate = `${y}.${m}.${d}`;
 
     const contextRows = (salesPlan || []).slice(0, 40).map(s => ({
       site: s.site_name,
@@ -78,26 +78,75 @@ module.exports = async (req, res) => {
       memo: (s.memo || '').substring(0, 120)
     }));
 
-    const prompt = `오늘 날짜: ${headerDate}
+    // 7일 전 날짜 계산 (자동 삭제 기준)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const cutoffDate = sevenDaysAgo.toISOString().split('T')[0];
 
-건설 및 골조(철콘) 수주 브리핑 생성.
-[수주 현황] 최근 7일 누적 데이터 반영 (오늘 수주는 [NEW], 변동은 [UPDATE])
-[골조 타깃 분석] 시평 순위 및 파트너 노트 참고 매칭
-[데이터 관리] 파트너 변동 사항 체크
+    const prompt = `당신은 건설/골조(철콘) 수주 브리핑 전문 분석가입니다.
+오늘 날짜: ${headerDate} (KST)
 
-[필수 형식]
-- 반드시 첫 줄에 "🏗️ 일일 브리핑 (${headerDate})"
-- 각 섹션/항목 사이에 반드시 줄바꿈(\\n) 삽입 (한 덩어리 금지)
-- 섹션: 1. [수주 현황], 2. [골조 타깃 분석], 3. [데이터 관리]
-- 브리핑 본문 뒤에 반드시 "💾 [DB 업로드용]" 마커 넣고 SQL 작성
-- SQL 스키마 (sales_plan): category, region, site_name, section, construction_company, scale, memo
-- 신규 현장은 INSERT, 기존 현장 변동은 UPDATE
-- INSERT 블록 마지막에 "ON CONFLICT (site_name) DO UPDATE SET memo = EXCLUDED.memo;" 포함
+# 작업
+오늘자 국내 건설/수주 뉴스를 Google Search로 폭넓게 조사하여, 아래 EXACT 형식으로 일일 브리핑을 작성하세요.
+**상세하게**, **풍부하게**, **여러 항목**을 포함해야 합니다. 짧은 답변은 거부됩니다.
 
-현재 DB에 등록된 sales_plan 항목 (총 ${(salesPlan || []).length}건 중 최대 40건):
+# 작성 규칙
+1. **[수주 현황]**: 최근 7일 누적. 오늘 신규 수주는 [NEW], 동향/변동 있는 기존 수주는 [UPDATE]. 각 항목은 반드시 줄바꿈으로 구분. 최소 8건 이상 포함.
+2. **[골조 타깃 분석]**: 주요 신규 수주 건마다 시평 순위가 높은 철콘/골조 협력사를 매칭하여 추천. 각 사이트별 핵심 시공 포인트 명시.
+3. **[데이터 관리]**: 원청사별 골조 파트너 목록 변동 사항. 없으면 "특이사항 없음" 명시.
+
+# 형식 (반드시 이 구조 그대로)
+\`\`\`
+🏗️ 일일 브리핑 (${headerDate})
+
+[수주 현황]
+[NEW] <지역> <현장명> (<원청사>) - <날짜> [확정]
+상태: <한 줄 요약>
+규모: 약 <금액>억 원.
+
+[NEW] <지역> <현장명> (<원청사>) - <날짜> [확정]
+상태: <한 줄 요약>
+규모: 약 <금액>억 원.
+
+[UPDATE] <지역> <현장명> (<원청사>) - <날짜> [확정/동향]
+상태: <변동 사항 요약>
+
+(...최소 8건 이상)
+
+(※ ${cutoffDate} 이전 데이터는 7일 경과 규칙에 따라 자동 삭제됩니다.)
+
+[골조 타깃 분석]
+<현장명> (<원청사>): <시공 특성 분석>. <추천 협력사>이(가) 유력합니다. <핵심 공법/장비 제안>.
+
+<현장명> (<원청사>): <분석>. <추천>. <제안>.
+
+(...주요 신규 건마다)
+
+[데이터 관리]
+<특이사항 또는 "특이사항 없음">
+
+💾 [DB 업로드용]
+UPDATE sales_plan SET memo = '[UPDATE] M/D <변동내용>' WHERE site_name = '<기존 현장명>';
+INSERT INTO sales_plan (category, region, site_name, section, construction_company, scale, contract_date, memo) VALUES ('<건축/플랜트/토목>', '<지역>', '<현장명>', '<섹션>', '<원청사>', '<규모>', '${today}', '[수주] M/D 확정 [Hint: <제안내용>]') ON CONFLICT (site_name) DO UPDATE SET memo = EXCLUDED.memo;
+(...신규 항목마다)
+DELETE FROM sales_plan WHERE contract_date < '${cutoffDate}';
+\`\`\`
+
+# DB 컬럼 (sales_plan)
+- category (건축/플랜트/토목/기타)
+- region (서울/경기/인천/부산/...)
+- site_name (반드시 UNIQUE)
+- section (재건축/재개발/공공주택/일반건축/정비사업/에너지 등)
+- construction_company (원청사)
+- scale (예: '9,709억')
+- contract_date (YYYY-MM-DD)
+- memo
+
+# 현재 DB에 등록된 sales_plan (최대 40건 미리보기)
 ${JSON.stringify(contextRows, null, 2)}
 
-위 데이터와 최신 국내 건설/수주 뉴스(Google Search)를 참고하여 브리핑을 작성하세요.`;
+위 데이터를 참고하되, 오늘자 최신 뉴스(Google Search)에서 발굴한 신규 수주 건을 반드시 포함하세요.
+이메일/리포트로 받는 수준의 **전문적인 분석 리포트**를 작성하세요.`;
 
     const fullText = await callGemini(prompt, GEMINI_API_KEY);
 
@@ -106,7 +155,9 @@ ${JSON.stringify(contextRows, null, 2)}
     briefingText = briefingText
       .replace(/INSERT\s+INTO\s+[\s\S]*?;\s*/gi, '')
       .replace(/UPDATE\s+\w+\s+SET\s+[\s\S]*?;\s*/gi, '')
+      .replace(/DELETE\s+FROM\s+[\s\S]*?;\s*/gi, '')
       .replace(/ON\s+CONFLICT[\s\S]*?;\s*/gi, '')
+      .replace(/COMMIT\s*;?/gi, '')
       .replace(/```sql[\s\S]*?```/gi, '')
       .replace(/```[\s\S]*?```/gi, '')
       .trim();
@@ -196,6 +247,28 @@ ${JSON.stringify(contextRows, null, 2)}
         } catch (e) {
           result.insert_fails.push((row.site_name || 'unknown') + ': ' + (e.message || e));
         }
+      }
+    }
+
+    // DELETE 처리 (7일 경과 데이터 자동 정리)
+    // 안전: contract_date < 'YYYY-MM-DD' 패턴만 허용 (DROP/TRUNCATE 등은 무시)
+    result.deleted = 0;
+    result.delete_fails = [];
+    const deleteRegex = /DELETE\s+FROM\s+(\w+)\s+WHERE\s+(\w+)\s*<\s*'(\d{4}-\d{2}-\d{2})'\s*;/gi;
+    let del;
+    while ((del = deleteRegex.exec(fullText)) !== null) {
+      const table = del[1], col = del[2], dateVal = del[3];
+      // 안전 가드: sales_plan + 날짜 컬럼만 허용
+      if (table !== 'sales_plan' || !/date/i.test(col)) {
+        result.delete_fails.push(`skip ${table}.${col} (safety guard)`);
+        continue;
+      }
+      try {
+        const { data, error } = await supabase.from(table).delete().lt(col, dateVal).select('id');
+        if (error) throw error;
+        result.deleted += (data ? data.length : 0);
+      } catch (e) {
+        result.delete_fails.push(`${table}.${col}<${dateVal}: ` + (e.message || e));
       }
     }
 
