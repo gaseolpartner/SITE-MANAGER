@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/daily-briefing.js": {
-      "maxDuration": 300
+      "maxDuration": 60
     }
   },
   "crons": [
