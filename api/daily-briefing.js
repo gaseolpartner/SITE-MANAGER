@@ -32,20 +32,30 @@ function parseSqlValues(valStr) {
 
 async function callGemini(prompt, apiKey) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      tools: [{ google_search: {} }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 8192, thinkingConfig: { thinkingBudget: 0 } }
-    })
-  });
-  const json = await res.json();
-  if (!res.ok) throw new Error('Gemini API: ' + JSON.stringify(json));
-  const text = json.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join('\n') || '';
-  if (!text) throw new Error('Empty Gemini response: ' + JSON.stringify(json));
-  return text;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 50000);
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 6000, thinkingConfig: { thinkingBudget: 0 } }
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    const json = await res.json();
+    if (!res.ok) throw new Error('Gemini API: ' + JSON.stringify(json).substring(0, 500));
+    const text = json.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join('\n') || '';
+    if (!text) throw new Error('Empty Gemini response: ' + JSON.stringify(json).substring(0, 500));
+    return text;
+  } catch (e) {
+    clearTimeout(timeoutId);
+    if (e.name === 'AbortError') throw new Error('Gemini API timeout (>50s)');
+    throw e;
+  }
 }
 
 module.exports = async (req, res) => {
@@ -78,7 +88,6 @@ module.exports = async (req, res) => {
       memo: (s.memo || '').substring(0, 120)
     }));
 
-    // 7일 전 날짜 계산 (자동 삭제 기준)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const cutoffDate = sevenDaysAgo.toISOString().split('T')[0];
@@ -175,9 +184,9 @@ ${JSON.stringify(contextRows, null, 2)}
     }
 
     const updateRegex = /UPDATE\s+(\w+)\s+SET\s+(\w+)\s*=\s*'((?:[^']|'')*)'\s*WHERE\s+(\w+)\s*=\s*'((?:[^']|'')*)'\s*;/gi;
-    let m;
-    while ((m = updateRegex.exec(fullText)) !== null) {
-      const table = m[1], setCol = m[2], setVal = m[3].replace(/''/g, "'"), whereCol = m[4], whereVal = m[5].replace(/''/g, "'");
+    let updMatch;
+    while ((updMatch = updateRegex.exec(fullText)) !== null) {
+      const table = updMatch[1], setCol = updMatch[2], setVal = updMatch[3].replace(/''/g, "'"), whereCol = updMatch[4], whereVal = updMatch[5].replace(/''/g, "'");
       try {
         const { data, error } = await supabase.from(table).update({ [setCol]: setVal }).eq(whereCol, whereVal).select();
         if (error) throw error;
@@ -250,15 +259,12 @@ ${JSON.stringify(contextRows, null, 2)}
       }
     }
 
-    // DELETE 처리 (7일 경과 데이터 자동 정리)
-    // 안전: contract_date < 'YYYY-MM-DD' 패턴만 허용 (DROP/TRUNCATE 등은 무시)
     result.deleted = 0;
     result.delete_fails = [];
     const deleteRegex = /DELETE\s+FROM\s+(\w+)\s+WHERE\s+(\w+)\s*<\s*'(\d{4}-\d{2}-\d{2})'\s*;/gi;
     let del;
     while ((del = deleteRegex.exec(fullText)) !== null) {
       const table = del[1], col = del[2], dateVal = del[3];
-      // 안전 가드: sales_plan + 날짜 컬럼만 허용
       if (table !== 'sales_plan' || !/date/i.test(col)) {
         result.delete_fails.push(`skip ${table}.${col} (safety guard)`);
         continue;
