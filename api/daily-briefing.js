@@ -32,29 +32,54 @@ function parseSqlValues(valStr) {
 
 async function callGemini(prompt, apiKey) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 50000);
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ google_search: {} }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 6000, thinkingConfig: { thinkingBudget: 0 } }
-      }),
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    const json = await res.json();
-    if (!res.ok) throw new Error('Gemini API: ' + JSON.stringify(json).substring(0, 500));
-    const text = json.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join('\n') || '';
-    if (!text) throw new Error('Empty Gemini response: ' + JSON.stringify(json).substring(0, 500));
-    return text;
-  } catch (e) {
-    clearTimeout(timeoutId);
-    if (e.name === 'AbortError') throw new Error('Gemini API timeout (>50s)');
-    throw e;
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    tools: [{ google_search: {} }],
+    generationConfig: { temperature: 0.7, maxOutputTokens: 6000, thinkingConfig: { thinkingBudget: 0 } }
+  });
+
+  const maxAttempts = 3;
+  let lastError = '';
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      const json = await res.json();
+      if (!res.ok) {
+        lastError = 'HTTP ' + res.status + ': ' + JSON.stringify(json).substring(0, 300);
+        if ((res.status === 503 || res.status === 429 || res.status >= 500) && attempt < maxAttempts) {
+          await new Promise(r => setTimeout(r, attempt * 5000));
+          continue;
+        }
+        throw new Error('Gemini API: ' + lastError);
+      }
+      const text = json.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join('\n') || '';
+      if (!text) {
+        lastError = 'Empty response: ' + JSON.stringify(json).substring(0, 300);
+        if (attempt < maxAttempts) {
+          await new Promise(r => setTimeout(r, attempt * 5000));
+          continue;
+        }
+        throw new Error(lastError);
+      }
+      return text;
+    } catch (e) {
+      clearTimeout(timeoutId);
+      lastError = e.message || String(e);
+      if (e.name === 'AbortError') lastError = 'Timeout (>45s)';
+      if (attempt < maxAttempts) {
+        await new Promise(r => setTimeout(r, attempt * 5000));
+        continue;
+      }
+      throw new Error('Gemini API failed after ' + maxAttempts + ' attempts: ' + lastError);
+    }
   }
 }
 
