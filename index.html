@@ -85,6 +85,15 @@
         tr{border-bottom:1px solid var(--border)}
         tr:hover{background:var(--bg)}
         .company-name{font-weight:600;color:var(--primary)}
+        /* 영업계획 표: 비고 긴 글 대응 */
+        .sales-table{table-layout:auto;min-width:1100px}
+        .sales-table td{vertical-align:top;word-break:keep-all;overflow-wrap:anywhere}
+        .sales-table td.company-name{min-width:170px}
+        .sales-table td.memo-cell{width:320px;min-width:240px;max-width:320px;padding-top:12px;padding-bottom:12px}
+        .memo-body{font-size:12px;color:var(--text-light);line-height:1.55;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+        .memo-clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+        .memo-toggle{margin-top:6px;font-size:11px;font-weight:600;color:var(--primary);background:none;border:none;padding:0;cursor:pointer;font-family:inherit}
+        .memo-toggle:hover{text-decoration:underline}
         .amount{font-family:'SF Mono',Consolas,monospace;color:var(--accent);font-weight:500}
         .badge{display:inline-flex;align-items:center;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600}
         .badge-active{background:rgba(16,185,129,.1);color:var(--success)}
@@ -1128,6 +1137,18 @@
             return '';
         }
 
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        function escapeAttr(str) {
+            return escapeHtml(str).replace(/"/g, '&quot;');
+        }
+        function toggleMemo(btn) {
+            const body = btn.previousElementSibling;
+            const clamped = body.classList.toggle('memo-clamp');
+            btn.textContent = clamped ? '더보기' : '접기';
+        }
+
         function updateSalesCounts() {
             const yearFilter = document.getElementById('salesYearFilter').value;
             const categoryFilter = document.getElementById('salesCategoryFilter').value;
@@ -1219,7 +1240,7 @@
             headerHtml += '<th style="text-align:center;min-width:100px">영업 담당</th>';
             if (canEdit) headerHtml += '<th style="text-align:center">관리</th>';
             
-            let html = '<table><thead><tr>' + headerHtml + '</tr></thead><tbody>';
+            let html = '<table class="sales-table"><thead><tr>' + headerHtml + '</tr></thead><tbody>';
             const now = new Date();
             const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
             filtered.forEach(s => {
@@ -1238,7 +1259,17 @@
                 if (!hideConstruction) rowHtml += '<td style="text-align:center">'+(s.construction_company||'-')+'</td>';
                 if (!hideScale) rowHtml += '<td style="text-align:center">'+(s.scale||'-')+'</td>';
                 rowHtml += '<td style="text-align:center;white-space:nowrap">'+(s.start_date||'-')+'</td>';
-                if (!hideMemo) rowHtml += '<td style="max-width:150px;font-size:12px;color:var(--text-light)">'+(s.memo||'-')+'</td>';
+                if (!hideMemo) {
+                    const memoText = (s.memo || '').trim();
+                    if (!memoText) {
+                        rowHtml += '<td class="memo-cell"><div class="memo-body">-</div></td>';
+                    } else {
+                        const needsClamp = memoText.length > 100;
+                        rowHtml += '<td class="memo-cell"><div class="memo-body'+(needsClamp ? ' memo-clamp' : '')+'" title="'+escapeAttr(memoText)+'">'+escapeHtml(memoText)+'</div>'
+                                 + (needsClamp ? '<button class="memo-toggle" onclick="toggleMemo(this)">더보기</button>' : '')
+                                 + '</td>';
+                    }
+                }
                 rowHtml += '<td style="text-align:center">'+assignBtn+'</td>';
                 if (canEdit) rowHtml += '<td style="text-align:center"><button class="btn btn-secondary btn-xs" onclick="openEditSalesPlan(\''+s.id+'\')">수정</button></td>';
                 
