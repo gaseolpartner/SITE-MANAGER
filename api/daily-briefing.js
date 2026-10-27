@@ -83,10 +83,24 @@ async function callGemini(prompt, apiKey) {
   }
 }
 
+// AI 가 만든 SQL 은 이 표·컬럼에만 반영 (그 외 표 — 회원·권한 등 — 는 절대 건드리지 않음)
+const ALLOWED_TABLE = 'sales_plan';
+const ALLOWED_COLS = new Set(['category', 'region', 'site_name', 'section', 'construction_company', 'concrete_company',
+  'scale', 'contract_date', 'start_date', 'memo']);
+const ALLOWED_WHERE = new Set(['site_name']);
+
 module.exports = async (req, res) => {
-  const isTest = req.query && req.query.test === '1';
+  // 실행 권한
+  //  - 매일 아침 Vercel 예약 실행(cron)은 지금처럼 그대로 동작 (설정 변경 필요 없음)
+  //  - CRON_SECRET 을 Vercel 에 넣어 두면: 그 값을 아는 요청만 실행 (더 안전)
+  //  - 예전처럼 주소 뒤에 ?test=1 만 붙여 아무나 실행하던 것은 막음 → 수동 실행은 ?secret=<CRON_SECRET>
   const cronSecret = process.env.CRON_SECRET;
-  if (!isTest && cronSecret && req.headers['authorization'] !== `Bearer ${cronSecret}`) {
+  const ua = String(req.headers['user-agent'] || '');
+  const fromVercelCron = ua.startsWith('vercel-cron/');
+  const authOk = cronSecret
+    ? (req.headers['authorization'] === `Bearer ${cronSecret}` || (req.query && req.query.secret === cronSecret))
+    : fromVercelCron;
+  if (!authOk) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -212,6 +226,10 @@ ${JSON.stringify(contextRows, null, 2)}
     let updMatch;
     while ((updMatch = updateRegex.exec(fullText)) !== null) {
       const table = updMatch[1], setCol = updMatch[2], setVal = updMatch[3].replace(/''/g, "'"), whereCol = updMatch[4], whereVal = updMatch[5].replace(/''/g, "'");
+      if (table !== ALLOWED_TABLE || !ALLOWED_COLS.has(setCol) || !ALLOWED_WHERE.has(whereCol)) {
+        result.update_fails.push(`skip ${table}.${setCol} (safety guard)`);
+        continue;
+      }
       try {
         const { data, error } = await supabase.from(table).update({ [setCol]: setVal }).eq(whereCol, whereVal).select();
         if (error) throw error;
@@ -223,7 +241,7 @@ ${JSON.stringify(contextRows, null, 2)}
     }
 
     const conflictMatch = fullText.match(/ON\s+CONFLICT\s*\((\w+)\)/i);
-    const onConflictCol = conflictMatch ? conflictMatch[1] : 'site_name';
+    const onConflictCol = conflictMatch && ALLOWED_WHERE.has(conflictMatch[1]) ? conflictMatch[1] : 'site_name';
     const cleaned = fullText.replace(/\)\s*ON\s+CONFLICT\s*\([^)]*\)\s*DO\s+UPDATE\s+SET\s+[^;]*/gi, ')');
 
     const insertRegex = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s+([\s\S]+?)\s*;/gi;
@@ -231,6 +249,10 @@ ${JSON.stringify(contextRows, null, 2)}
     while ((ins = insertRegex.exec(cleaned)) !== null) {
       const table = ins[1];
       const columns = ins[2].split(',').map(c => c.trim().replace(/["`]/g, ''));
+      if (table !== ALLOWED_TABLE) {
+        result.insert_fails.push(`skip ${table} (safety guard)`);
+        continue;
+      }
       const allValuesStr = ins[3].trim().replace(/;$/, '').trim();
 
       const valueRows = [];
@@ -258,7 +280,9 @@ ${JSON.stringify(contextRows, null, 2)}
           if (v && v.toUpperCase && v.toUpperCase() === 'NULL') v = null;
           row[col] = v;
         });
-        delete row.id; delete row.created_at; delete row.updated_at; delete row.assigned_user; delete row.assigned_at;
+        // 허용된 컬럼만 남김
+        Object.keys(row).forEach(k => { if (!ALLOWED_COLS.has(k)) delete row[k]; });
+        if (!row.site_name) continue;
 
         try {
           if (onConflictCol && row[onConflictCol]) {
