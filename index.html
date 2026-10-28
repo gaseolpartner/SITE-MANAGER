@@ -29,7 +29,9 @@
         .gp-topbar nav{display:flex;gap:20px}
         .gp-topbar nav a.on{color:var(--accent);font-weight:600}
         .gp-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
-        .gp-brand img{height:36px;width:auto}
+        /* 로고: 악수 그림만 (그림 아래 글자는 잘라서 옆 글자와 겹치지 않게 — 홈페이지와 같은 방식) */
+        .gp-brand .gp-li{width:98px;height:41px;background:url(https://gaseolpartner.com/storage/upload_images/nmifMZo9uxaKHd2Wp36g3Sd6Ji1m27rzCWLnsyuk.png) no-repeat 0 0/98px auto;flex:none}
+        .login-logo .gp-brand .gp-li{width:118px;height:49px;background-size:118px auto}
         .gp-brand .wm{display:flex;flex-direction:column;line-height:1}
         .gp-brand .ko{font-size:22px;font-weight:800;color:#2b2b2b;letter-spacing:-.5px}
         .gp-brand .en{font-size:9.5px;font-weight:700;color:#8a8a8a;letter-spacing:.3em;margin-top:4px}
@@ -215,15 +217,15 @@
         .gp-foot{border-top:1px solid var(--border);background:#fff;margin-top:40px}
         .gp-foot-inner{max-width:1440px;margin:0 auto;padding:20px 32px;font-size:12px;color:var(--text-light);line-height:1.8}
         .gp-foot-inner span{color:#D4D4D4;margin:0 8px}
-        @media(max-width:768px){.gp-topbar-inner{padding:0 16px}.gp-topbar nav{display:none}.gp-brand img{height:30px}.gp-brand .ko{font-size:19px}.gp-brand .en{font-size:8.5px}.header-title .gp-chip,.sync-indicator,.user-badge,.gp-brand .en,.header .gp-brand img{display:none}.header-right{gap:0}.header-btn{padding:6px 9px;margin-left:3px;font-size:14px}.hb-t{display:none}.gp-foot-inner{padding:16px}.header{padding:0 16px}.content{padding:16px}.dashboard-grid{grid-template-columns:repeat(2,1fr)}.controls-bar{flex-direction:column;align-items:stretch}.search-box{max-width:none}.form-row{grid-template-columns:1fr}}
+        @media(max-width:768px){.gp-topbar-inner{padding:0 16px}.gp-topbar nav{display:none}.gp-brand .gp-li,.login-logo .gp-brand .gp-li{width:84px;height:35px;background-size:84px auto}.gp-brand .ko{font-size:19px}.gp-brand .en{font-size:8.5px}.header-title .gp-chip,.sync-indicator,.user-badge,.gp-brand .en,.header .gp-brand .gp-li{display:none}.header-right{gap:0}.header-btn{padding:6px 9px;margin-left:3px;font-size:14px}.hb-t{display:none}.gp-foot-inner{padding:16px}.header{padding:0 16px}.content{padding:16px}.dashboard-grid{grid-template-columns:repeat(2,1fr)}.controls-bar{flex-direction:column;align-items:stretch}.search-box{max-width:none}.form-row{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
     <div class="login-page" id="loginPage">
-        <div class="gp-topbar"><div class="gp-topbar-inner"><a href="https://gaseolpartner.com"><span class="dot"></span>가설파트너 홈페이지 ↗</a><nav><a href="https://gaseolpartner.com/pages/introduction">가설 설계 프로그램</a><a href="https://gaseolpartner.vercel.app/welcome">가설재 견적 비교</a><a href="https://gaseolpartner.com/pages/structureatuntroduction">구조검토</a><a href="https://gaseolpartner.com/pages/calculators">지원 서비스</a><a href="https://gaseolpartner.com/pages/support">고객지원</a></nav></div></div>
+        <div class="gp-topbar"><div class="gp-topbar-inner"><a href="https://gaseolpartner.com"><span class="dot"></span>가설파트너 홈페이지 ↗</a><nav><a href="https://gaseolpartner.com/pages/introduction">가설 설계 프로그램</a><a href="https://gaseolpartner.com/pages/precio">가설재 견적 비교</a><a href="https://gaseolpartner.com/pages/structureatuntroduction">구조검토</a><a href="https://gaseolpartner.com/pages/calculators">지원 서비스</a><a href="https://gaseolpartner.com/pages/support">고객지원</a></nav></div></div>
         <div class="login-wrap">
         <div class="login-card">
-            <div class="login-logo"><span class="gp-brand"><img src="https://gaseolpartner.com/storage/upload_images/nmifMZo9uxaKHd2Wp36g3Sd6Ji1m27rzCWLnsyuk.png" alt="" aria-hidden="true" onerror="this.style.display='none'"><span class="wm"><span class="ko">가설파트너</span><span class="en">GASEOL PARTNER</span></span></span><h1>현장관리 시스템</h1><span class="rule"></span><p id="formTitle">시스템에 로그인하세요</p></div>
+            <div class="login-logo"><span class="gp-brand"><span class="gp-li" aria-hidden="true"></span><span class="wm"><span class="ko">가설파트너</span><span class="en">GASEOL PARTNER</span></span></span><h1>현장관리 시스템</h1><span class="rule"></span><p id="formTitle">시스템에 로그인하세요</p></div>
             <div class="alert alert-error" id="errorAlert"></div>
             <div class="alert alert-success" id="successAlert"></div>
             <form id="loginForm" onsubmit="handleLogin(event)">
@@ -247,9 +249,9 @@
     </div>
     <div class="main-system" id="mainSystem">
         <div class="gp-head">
-        <div class="gp-topbar"><div class="gp-topbar-inner"><a href="https://gaseolpartner.com"><span class="dot"></span>가설파트너 홈페이지 ↗</a><nav><a href="https://gaseolpartner.com/pages/introduction">가설 설계 프로그램</a><a href="https://gaseolpartner.vercel.app/welcome">가설재 견적 비교</a><a href="https://gaseolpartner.com/pages/structureatuntroduction">구조검토</a><a href="https://gaseolpartner.com/pages/calculators">지원 서비스</a><a href="https://gaseolpartner.com/pages/support">고객지원</a></nav></div></div>
+        <div class="gp-topbar"><div class="gp-topbar-inner"><a href="https://gaseolpartner.com"><span class="dot"></span>가설파트너 홈페이지 ↗</a><nav><a href="https://gaseolpartner.com/pages/introduction">가설 설계 프로그램</a><a href="https://gaseolpartner.com/pages/precio">가설재 견적 비교</a><a href="https://gaseolpartner.com/pages/structureatuntroduction">구조검토</a><a href="https://gaseolpartner.com/pages/calculators">지원 서비스</a><a href="https://gaseolpartner.com/pages/support">고객지원</a></nav></div></div>
         <header class="header"><div class="header-inner">
-            <div class="header-left"><div class="header-title"><span class="gp-brand"><img src="https://gaseolpartner.com/storage/upload_images/nmifMZo9uxaKHd2Wp36g3Sd6Ji1m27rzCWLnsyuk.png" alt="" aria-hidden="true" onerror="this.style.display='none'"><span class="wm"><span class="ko">가설파트너</span><span class="en">GASEOL PARTNER</span></span></span><span class="gp-chip">현장관리</span></div><span class="sync-indicator" id="syncIndicator">● 연결됨</span></div>
+            <div class="header-left"><div class="header-title"><span class="gp-brand"><span class="gp-li" aria-hidden="true"></span><span class="wm"><span class="ko">가설파트너</span><span class="en">GASEOL PARTNER</span></span></span><span class="gp-chip">현장관리</span></div><span class="sync-indicator" id="syncIndicator">● 연결됨</span></div>
             <div class="header-right">
                 <div class="user-badge"><div class="user-avatar" id="userAvatar">관</div><span id="userName">관리자</span></div>
                 <div id="adminBtns" style="display:none"><button class="header-btn" id="userMgmtBtn" onclick="openUserModal()" title="회원관리">👥<span class="hb-t"> 회원관리</span></button><button class="header-btn" onclick="openActivityLogModal()" title="활동로그">📋<span class="hb-t"> 활동로그</span></button></div>
