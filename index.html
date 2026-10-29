@@ -703,7 +703,7 @@
                 const { data, error } = await db.rpc('sm_register', { p_login_id: id.trim(), p_password: pw, p_name: name, p_department: dept });
                 if (error) { showAlert('error', '회원가입 중 오류가 발생했습니다.'); }
                 else if (!data || !data.ok) { showAlert('error', (data && data.error) || '회원가입 중 오류가 발생했습니다.'); }
-                else { showAlert('success', '가입 신청 완료! 관리자 승인 후 로그인할 수 있습니다.'); document.getElementById('registerForm').reset(); setTimeout(toggleAuthForm, 1500); }
+                else { try { fetch('/api/notify-signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginId: id.trim() }), keepalive: true }).catch(() => {}); } catch (e) {} showAlert('success', '가입 신청 완료! 관리자 승인 후 로그인할 수 있습니다.'); document.getElementById('registerForm').reset(); setTimeout(toggleAuthForm, 1500); }
             } catch (e) { showAlert('error', '회원가입 중 오류가 발생했습니다.'); }
             setSyncStatus('synced');
         }
